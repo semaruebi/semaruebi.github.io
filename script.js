@@ -293,7 +293,8 @@ function createCardHtml(post) {
     if (post.imageUrl) {
         const urls = post.imageUrl.split(',');
         imageHtml = '<div class="image-gallery">';
-        urls.forEach(url => { if(url.trim()) imageHtml += `<img src="${url}" class="post-image" referrerpolicy="no-referrer" onclick="window.open(this.src)">`; });
+        // ここを修正：onclickイベントでopenImageModalを呼び出す
+        urls.forEach(url => { if(url.trim()) imageHtml += `<img src="${url}" class="post-image" referrerpolicy="no-referrer" onclick="event.stopPropagation(); openImageModal('${url}')">`; });
         imageHtml += '</div>';
     }
     
@@ -464,7 +465,7 @@ function toggleCommentLike(commentId, btn) {
         method: "POST", 
         mode: "no-cors", 
         headers:{"Content-Type":"application/json"}, 
-        body: JSON.stringify({action:"like_comment", id: commentId}) 
+        body: JSON_data({action:"like_comment", id: commentId}) 
     });
 }
 
@@ -586,4 +587,33 @@ function escapeHtml(str) {
         };
         return escape[match];
     });
+}
+
+// --- 画像モーダル関連関数 ---
+function openImageModal(imageUrl) {
+    const modal = document.getElementById('image-modal');
+    const modalImage = document.getElementById('modal-image');
+    modal.style.display = "block";
+    modalImage.src = imageUrl;
+    document.body.classList.add('modal-open'); // bodyのスクロールを禁止
+    modal.classList.remove('closing'); 
+    modalImage.classList.remove('closing'); 
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('image-modal');
+    const modalImage = document.getElementById('modal-image');
+
+    // 閉じるアニメーション用のクラスを追加
+    modal.classList.add('closing');
+    modalImage.classList.add('closing');
+
+    // アニメーションが終わるころ（0.3秒後）に非表示にする
+    setTimeout(() => {
+        modal.style.display = "none";
+        document.body.classList.remove('modal-open'); // スクロール禁止を解除
+        modal.classList.remove('closing'); 
+        modalImage.classList.remove('closing');
+        modalImage.src = ""; // 次回のためにリセット
+    }, 300);
 }

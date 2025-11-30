@@ -69,7 +69,9 @@
 body { 
     margin: 0; font-family: 'Segoe UI', sans-serif; 
     background-color: var(--bg-main); color: var(--fg-primary); 
-    display: flex; height: 100vh; overflow: hidden; 
+    display: flex; height: 100vh; 
+    overflow: hidden; 
+    overflow-x: hidden; 
     transition: background-color 0.3s, color 0.3s; 
 }
 
@@ -323,6 +325,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 
 /* フッター（固定・コンパクト版） */
 footer {
+    margin-top: 20px;
     padding: 10px;
     border-top: 1px solid var(--border-color);
     text-align: center;
@@ -333,41 +336,22 @@ footer {
     flex-shrink: 0;
 }
 
-footer a {
-    color: var(--cyan);
-    text-decoration: none;
-    font-weight: bold;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-footer p {
-    margin: 3px 0;
-}
-
-.footer-content {
-    max-width: 800px;
-    margin: 0 auto;
-    line-height: 1.4;
-}
-
-.copyright {
-    margin-top: 5px;
-    font-size: 0.9em;
-    opacity: 0.8;
-}
+footer a { color: var(--cyan); text-decoration: none; font-weight: bold; }
+footer a:hover { text-decoration: underline; }
+footer p { margin: 3px 0; }
+.footer-content { max-width: 800px; margin: 0 auto; line-height: 1.4; }
+.copyright { margin-top: 5px; font-size: 0.9em; opacity: 0.8; }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ---  スマホ・タブレット向け緊急処置 --- */
+/* --- 📱 スマホ・タブレット向け最終処方箋 --- */
 @media (max-width: 900px) { 
     body { 
         flex-direction: column; 
         height: auto; 
         overflow-y: auto; 
         -webkit-overflow-scrolling: touch; 
+        overflow-x: hidden; /* 横スクロール禁止 */
     }
 
     /* サイドバー：トップに固定して折りたたみ式にする */
@@ -377,7 +361,7 @@ footer p {
         position: sticky; 
         top: 0; 
         z-index: 1000; 
-        max-height: 45px; 
+        max-height: 45px; /* ★ユーザー指定寸法 */
         overflow: hidden; 
         border-right: none; 
         border-bottom: 2px solid var(--purple); 
@@ -388,14 +372,14 @@ footer p {
 
     /* 開いた時のスタイル */
     aside.open {
-        max-height: 20vh; 
+        max-height: 20vh; /* ★ユーザー指定寸法 */
         overflow-y: auto;
         border-bottom: 2px solid var(--cyan);
     }
 
     .sidebar-header {
         padding: 10px 20px;
-        height: 45px; 
+        height: 45px; /* ★ユーザー指定寸法 */
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -429,7 +413,7 @@ footer p {
     header { 
         padding: 10px 15px; 
         position: sticky;
-        top: 45px; /* サイドバーの下に固定 */
+        top: 45px; /* ★ユーザー指定寸法 */
         z-index: 900;
     }
     
@@ -452,8 +436,116 @@ footer p {
     
     .post-image { width: 100%; height: auto; max-height: 250px; }
     
-    footer { padding-bottom: 80px; }
+    footer { padding-bottom: 40px; }
 }
 
 /* PCではスマホ用アイコンを隠す */
 .mobile-toggle-icon { display: none; }
+/* --- 画像ギャラリー（モーダル）スタイル --- */
+/* --- 画像ギャラリー（モーダル）スタイル --- */
+.image-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 2000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* スクロールは不要なので hidden に */
+    background-color: rgba(0,0,0,0.9); 
+    backdrop-filter: blur(5px); 
+    animation: fadeInModal 0.3s forwards; 
+}
+
+.image-modal.closing {
+    animation: fadeOutModal 0.3s forwards; 
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOutModal {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.modal-content {
+    /* ↓↓↓ ここから中央寄せの魔法 ↓↓↓ */
+    position: absolute; /* 絶対配置にする */
+    top: 50%; /* 上から50%の位置 */
+    left: 50%; /* 左から50%の位置 */
+    /* 自身のサイズの半分だけ上と左に戻すことで、完全に中央に配置 */
+    transform: translate(-50%, -50%); 
+    /* ↑↑↑ ここまで ↑↑↑ */
+
+    max-width: 95%; /* 少し大きめに表示 */
+    max-height: 95%; /* 少し大きめに表示 */
+    object-fit: contain; 
+    animation: zoomInModal 0.3s forwards; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* 少し影をつけて立体的に */
+}
+
+.modal-content.closing {
+    animation: zoomOutModal 0.3s forwards; 
+}
+
+/* アニメーションも中央配置を維持するように調整 */
+@keyframes zoomInModal {
+    /* translate(-50%, -50%) を維持しつつスケールさせる */
+    from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes zoomOutModal {
+    from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    to { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    z-index: 2001; 
+    background: rgba(0,0,0,0.5); /* 閉じるボタンの背景を少し暗く */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+    color: var(--red);
+    background: rgba(255,255,255,0.2);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* スマホでのモーダル調整 */
+@media (max-width: 900px) {
+    .modal-close {
+        font-size: 30px;
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+    /* スマホでも中央寄せ設定はそのまま効くので、サイズ指定だけでOK */
+    .modal-content {
+        max-width: 98%;
+        max-height: 90%;
+    }
+}
