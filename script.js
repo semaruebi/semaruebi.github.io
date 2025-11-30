@@ -5,8 +5,8 @@ let currentFilter = { region: null, route: null };
 let myLikedPosts = JSON.parse(localStorage.getItem('rta_liked_posts') || '[]');
 let myLikedComments = JSON.parse(localStorage.getItem('rta_liked_comments') || '[]');
 let openRegions = {};
+let homeSections = { popular: true, latest: true };
 
-// 起動時処理
 window.onload = function() { 
     loadTheme();
     fetchData(); 
@@ -89,48 +89,31 @@ function fetchData(btnElement = null) {
     const container = document.getElementById("main-container");
     let originalIcon = "";
     
-    // 更新ボタンが押された場合
     if(btnElement) {
         btnElement.disabled = true;
         originalIcon = btnElement.innerHTML;
         btnElement.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i>'; 
     } else if(!allData.posts.length) {
-        // 初回ロード時
         container.innerHTML = '<p class="loading"><i class="fas fa-spinner fa-spin"></i> 診断中…じっとしててね。</p>';
     }
 
-    // キャッシュ回避
     fetch(GAS_API_URL + '?t=' + Date.now())
-        .then(res => {
-            if (!res.ok) throw new Error("Network error");
-            return res.text();
-        })
-        .then(text => {
-            try {
-                const data = JSON.parse(text);
-                allData = data;
-                renderSidebar();
-                
-                const searchVal = document.getElementById("search-input").value;
-                if(searchVal) filterBySearch();
-                else if (currentFilter.region) renderPosts();
-                else renderHome();
-                
-                setupFormOptions();
-            } catch (e) {
-                console.error("JSON Parse Error:", e, text);
-                throw new Error("データの読み込みに失敗しました");
-            }
+        .then(res => res.json())
+        .then(data => {
+            allData = data;
+            renderSidebar();
+            
+            const searchVal = document.getElementById("search-input").value;
+            if(searchVal) filterBySearch();
+            else if (currentFilter.region) renderPosts();
+            else renderHome();
+            
+            setupFormOptions();
         })
         .catch(err => {
             console.error(err);
             if (allData.posts.length === 0 && !btnElement) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:20px; color:var(--red);">
-                        <p><i class="fas fa-exclamation-triangle"></i> あら、エラーみたい。落ち着くのよ。</p>
-                        <p style="font-size:0.8em; color:var(--comment);">連続で更新すると疲れちゃうの。少し休んでから再読み込みしてね。</p>
-                        <button onclick="fetchData()" style="margin-top:10px; padding:5px 15px; cursor:pointer;">再診する</button>
-                    </div>`;
+                container.innerHTML = '<p style="color:var(--red)">あら、エラーみたい。落ち着くのよ。</p>';
             } else {
                 console.log("更新に失敗したけど、鎮痛剤ならまだあるはず…（表示維持）");
             }
@@ -216,7 +199,7 @@ function filterBySearch() {
     container.innerHTML = html;
 }
 
-// --- ホーム表示 ---
+// --- ホーム表示 (アコーディオン化) ---
 function renderHome() {
     currentFilter = { region: null, route: null };
     document.getElementById("search-input").value = "";
@@ -238,11 +221,39 @@ function renderHome() {
     const popular = [...allData.posts].sort((a,b)=>b.likes-a.likes).slice(0,5);
     const latest = allData.posts.slice(0,5);
     
-    let html = `<div style="margin:20px 0; border-bottom:2px solid var(--border-color); color:var(--orange)">🔥 人気の投稿</div>`;
+    const popOpen = homeSections.popular ? 'open' : '';
+    const popClass = homeSections.popular ? 'open' : '';
+    const latOpen = homeSections.latest ? 'open' : '';
+    const latClass = homeSections.latest ? 'open' : '';
+
+    let html = ``;
+
+    html += `
+        <div class="section-header ${popClass}" onclick="toggleHomeSection('popular')" style="color:var(--orange);">
+            <span>🔥 人気の投稿</span>
+            <i class="fas fa-chevron-down section-toggle-icon"></i>
+        </div>
+        <div id="section-popular" class="section-content ${popOpen}">
+    `;
     popular.forEach(p => html += createCardHtml(p));
-    html += `<div style="margin:20px 0; border-bottom:2px solid var(--border-color); color:var(--cyan)">🕒 最新の投稿</div>`;
+    html += `</div>`;
+
+    html += `
+        <div class="section-header ${latClass}" onclick="toggleHomeSection('latest')" style="color:var(--cyan);">
+            <span>🕒 最新の投稿</span>
+            <i class="fas fa-chevron-down section-toggle-icon"></i>
+        </div>
+        <div id="section-latest" class="section-content ${latOpen}">
+    `;
     latest.forEach(p => html += createCardHtml(p));
+    html += `</div>`;
+
     container.innerHTML = html;
+}
+
+function toggleHomeSection(sectionName) {
+    homeSections[sectionName] = !homeSections[sectionName];
+    renderHome();
 }
 
 // --- 記事フィルタリング ---
@@ -559,6 +570,10 @@ function setupFormOptions() {
 }
 
 function showHome() { renderHome(); }
+function toggleMobileSidebar() {
+    const sidebar = document.getElementById('mobile-sidebar');
+    sidebar.classList.toggle('open');
+}
 function escapeHtml(str) {
     if (!str) return "";
     return str.replace(/[&<>"']/g, function(match) {

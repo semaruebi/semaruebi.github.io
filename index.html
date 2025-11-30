@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>精鋭狩りRTA Knowledge Base</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
-    <aside>
-        <div class="sidebar-header" onclick="showHome()">🏹 精鋭狩りRTA</div>
+    <aside id="mobile-sidebar">
+        <div class="sidebar-header" onclick="toggleMobileSidebar()">
+            <span>🏹 精鋭狩りRTA</span>
+            <i class="fas fa-chevron-down mobile-toggle-icon"></i>
+        </div>
         <div class="nav-list" id="sidebar-nav"></div>
     </aside>
 

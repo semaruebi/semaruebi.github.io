@@ -1,17 +1,19 @@
-/* テーマ変数定義 */
+/* --- テーマ変数定義 --- */
 :root {
-    /* デフォルト（ダーク：Dracula Modern） */
+    /* 🧛‍♂️ デフォルト（ダーク：Dracula Modern） */
     --bg-main: #20222a; 
     --bg-sidebar: #282a36; 
     --fg-primary: #f8f8f2;
     --current-line: #44475a; 
     --comment: #9eaec5; 
+    
     --cyan: #8be9fd;
     --green: #50fa7b; 
     --orange: #ffb86c; 
     --pink: #ff79c6; 
     --purple: #bd93f9; 
     --red: #ff5555;
+    
     --input-bg: #282a36;
     --border-color: #44475a;
     --shadow: 0 8px 20px rgba(0, 0, 0, 0.4); 
@@ -19,19 +21,21 @@
     --card-radius: 12px;
 }
 
-/* ライトテーマ（Atom One Light Modern） */
+/* ☀️ ライトテーマ（Atom One Light Modern） */
 [data-theme="light"] {
     --bg-main: #f4f7f9; 
     --bg-sidebar: #ffffff;
     --fg-primary: #24292e;
     --current-line: #edf2f7; 
     --comment: #6a737d;
+    
     --cyan: #0984e3; 
     --green: #00b894;
     --orange: #e17055;
     --pink: #e84393;
     --purple: #6c5ce7;
     --red: #d63031;
+    
     --input-bg: #ffffff;
     --border-color: #dfe6e9;
     --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
@@ -39,19 +43,21 @@
     --card-radius: 12px;
 }
 
-/* おシグテーマ（メロピデ・パステル） */
+/* 🍬 おシグテーマ（メロピデ・パステル） */
 [data-theme="sigewinne"] {
     --bg-main: #f0f9ff;
     --bg-sidebar: #ffffff;
     --fg-primary: #37474f;
     --current-line: #e1f5fe;
     --comment: #90a4ae;
+    
     --cyan: #29b6f6;
     --green: #66bb6a;
     --orange: #ffa726;
     --pink: #f06292;
     --purple: #ab47bc;
     --red: #ef5350;
+    
     --input-bg: #ffffff;
     --border-color: #b3e5fc;
     --shadow: 0 4px 15px rgba(129, 212, 250, 0.3);
@@ -59,7 +65,7 @@
     --card-radius: 12px;
 }
 
-/* --- ベーススタイル --- */
+/* --- ベーススタイル（PC向け） --- */
 body { 
     margin: 0; font-family: 'Segoe UI', sans-serif; 
     background-color: var(--bg-main); color: var(--fg-primary); 
@@ -82,6 +88,7 @@ aside {
 }
 .nav-list { flex: 1; overflow-y: auto; padding: 10px; }
 
+/* スクロールバー */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
@@ -118,6 +125,7 @@ aside {
     color: var(--green); margin-bottom: 15px; 
     border: 1px dashed var(--border-color); font-size: 1em; padding-left: 15px; font-weight: bold; 
 }
+.nav-item.home.active { color: #ffffff; border-style: solid; }
 
 .count-badge { 
     font-size: 0.75em; color: var(--fg-primary); background: var(--current-line); 
@@ -135,16 +143,14 @@ header {
 }
 h2 { margin: 0; color: var(--pink); font-size: 1.3em; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px;}
 
-/* 検索ボックス（右寄せ修正） */
+/* 検索ボックス */
 .search-box { position: relative; margin-left: auto; margin-right: 20px; display: flex; align-items: center; }
 .search-box input { 
     background: var(--input-bg); border: 1px solid var(--border-color);
-    /* 左はアイコン分、右は少し余白 */
-    padding: 10px 15px 10px 45px; 
-    border-radius: 25px; 
+    padding: 10px 15px 10px 45px; border-radius: 25px; 
     color: var(--fg-primary); outline: none; width: 220px; 
     transition: all 0.3s; box-sizing: border-box; 
-    text-align: right; /* ★ここで文字を右寄せ */
+    text-align: right;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
 }
 .search-box input:focus { width: 280px; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(171, 71, 188, 0.15); }
@@ -231,7 +237,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
     box-shadow: var(--shadow); 
     position: relative; transition: transform 0.2s, box-shadow 0.2s;
     border: 1px solid var(--border-color);
-    border-left-width: 5px; /* 左線だけ太く */
+    border-left-width: 5px; 
 }
 .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
 
@@ -290,6 +296,31 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 .comment-submit-btn { margin-top: 10px; background: var(--purple); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 0.9em; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 .comment-submit-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
+/* ホーム画面のセクション開閉 */
+.section-header {
+    margin: 20px 0 10px 0;
+    padding: 10px 15px;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    color: var(--orange);
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    transition: 0.2s;
+    user-select: none;
+}
+.section-header:hover { background: var(--current-line); transform: translateY(-2px); }
+.section-header span { display: flex; align-items: center; gap: 8px; }
+.section-content { display: none; }
+.section-content.open { display: block; animation: slideDown 0.3s; }
+.section-toggle-icon { transition: transform 0.3s; color: var(--comment); }
+.section-header.open .section-toggle-icon { transform: rotate(0deg); }
+.section-header:not(.open) .section-toggle-icon { transform: rotate(-90deg); }
+
 /* フッター（固定・コンパクト版） */
 footer {
     padding: 10px;
@@ -329,9 +360,100 @@ footer p {
 }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-@media (max-width: 600px) { 
-    body { flex-direction: column; } 
-    aside { width: 100%; height: auto; max-height: 250px; border-right: none; border-bottom: 1px solid var(--border-color); } 
-    .search-box input { width: 150px; }
-    .search-box input:focus { width: 200px; }
+
+/* --- 📱 スマホ・タブレット向け緊急処置 --- */
+@media (max-width: 900px) { 
+    body { 
+        flex-direction: column; 
+        height: auto; 
+        overflow-y: auto; 
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    /* サイドバー：トップに固定して折りたたみ式にする */
+    aside { 
+        width: 100%; 
+        height: auto; 
+        position: sticky; 
+        top: 0; 
+        z-index: 1000; 
+        max-height: 60px; 
+        overflow: hidden; 
+        border-right: none; 
+        border-bottom: 2px solid var(--purple); 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: max-height 0.3s ease-out; 
+        background-color: var(--bg-sidebar);
+    }
+
+    /* 開いた時のスタイル */
+    aside.open {
+        max-height: 80vh; 
+        overflow-y: auto;
+        border-bottom: 2px solid var(--cyan);
+    }
+
+    .sidebar-header {
+        padding: 0 20px;
+        height: 60px; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* スマホ用アイコンの回転 */
+    .mobile-toggle-icon {
+        display: block !important; 
+        transition: transform 0.3s;
+        font-size: 1.2em;
+        color: var(--purple);
+    }
+    aside.open .mobile-toggle-icon {
+        transform: rotate(180deg);
+    }
+
+    /* メインエリア */
+    main { 
+        flex: none; 
+        height: auto; 
+        overflow: visible; 
+    }
+
+    .content-scroll {
+        overflow-y: visible;
+        padding: 15px; 
+        height: auto;
+    }
+
+    /* コンテンツヘッダー */
+    header { 
+        padding: 10px 15px; 
+        position: sticky;
+        top: 60px; /* サイドバーの下に固定 */
+        z-index: 900;
+    }
+    
+    h2 { font-size: 1.1em; }
+
+    /* 検索ボックス調整 */
+    .search-box { margin-right: 10px; flex: 1; justify-content: flex-end;}
+    .search-box input { 
+        width: 100%; 
+        max-width: 150px;
+        padding: 8px 10px 8px 30px; 
+        font-size: 0.85em; 
+    }
+    .search-box input:focus { max-width: 200px; }
+    .search-box i { left: 10px; font-size: 0.9em; }
+
+    .post-area { margin: 15px; }
+    .card { padding: 15px; margin-bottom: 15px; }
+    .card-content { font-size: 0.95em; }
+    
+    .post-image { width: 100%; height: auto; max-height: 250px; }
+    
+    footer { padding-bottom: 80px; }
 }
+
+/* PCではスマホ用アイコンを隠す */
+.mobile-toggle-icon { display: none; }
