@@ -361,7 +361,7 @@ footer p {
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* --- 📱 スマホ・タブレット向け緊急処置 --- */
+/* ---  スマホ・タブレット向け緊急処置 --- */
 @media (max-width: 900px) { 
     body { 
         flex-direction: column; 
@@ -377,7 +377,7 @@ footer p {
         position: sticky; 
         top: 0; 
         z-index: 1000; 
-        max-height: 60px; 
+        max-height: 45px; 
         overflow: hidden; 
         border-right: none; 
         border-bottom: 2px solid var(--purple); 
@@ -388,14 +388,14 @@ footer p {
 
     /* 開いた時のスタイル */
     aside.open {
-        max-height: 80vh; 
+        max-height: 20vh; 
         overflow-y: auto;
         border-bottom: 2px solid var(--cyan);
     }
 
     .sidebar-header {
-        padding: 0 20px;
-        height: 60px; 
+        padding: 10px 20px;
+        height: 45px; 
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -429,7 +429,7 @@ footer p {
     header { 
         padding: 10px 15px; 
         position: sticky;
-        top: 60px; /* サイドバーの下に固定 */
+        top: 45px; /* サイドバーの下に固定 */
         z-index: 900;
     }
     
