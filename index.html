@@ -5,121 +5,307 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>精鋭狩りRTA Knowledge Base</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=M+PLUS+Rounded+1c:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8">
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=M+PLUS+Rounded+1c:wght@700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=10">
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </head>
 <body>
-    <aside id="mobile-sidebar">
+    <!-- トースト通知コンテナ -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+    
+    <aside id="mobile-sidebar" role="navigation" aria-label="メインナビゲーション" aria-hidden="true">
         <div class="sidebar-header" style="padding: 20px; font-family: var(--font-display);">
-             <span style="color:var(--cyan);">メニュー</span>
+             <span style="color:var(--cyan);">TOPIC</span>
         </div>
-        <div class="nav-list" id="sidebar-nav"></div>
+        <div class="nav-list" id="sidebar-nav" role="list"></div>
     </aside>
 
+
     <main>
-        <header>
+        <header role="banner">
             <div class="header-actions">
-                <button onclick="toggleMobileSidebar()" class="icon-btn mobile-menu-btn" title="メニューを開く/閉じる">
-                    <i class="fas fa-bars"></i>
+                <button onclick="toggleMobileSidebar()" class="icon-btn mobile-menu-btn" title="メニューを開く/閉じる" aria-label="メニューを開く" aria-expanded="false" aria-controls="mobile-sidebar">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
                 </button>
-                <h2 id="current-view-title">🏠 Home</h2>
+                <h2 id="current-view-title">400EENote</h2>
             </div>
             
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="search-input" placeholder="検索..." onkeyup="handleSearchInput()" onfocus="showSuggestions()" autocomplete="off">
-                <div id="search-suggestions" class="search-suggestions"></div>
+            <div class="search-box" role="search">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input type="text" id="search-input" placeholder="検索..." onkeyup="handleSearchInput()" onfocus="showSuggestions()" autocomplete="off" aria-label="検索" aria-autocomplete="list" aria-controls="search-suggestions">
+                <div id="search-suggestions" class="search-suggestions" role="listbox" aria-label="検索候補"></div>
+                <div id="search-type-selector" class="search-type-selector" style="display: none;">
+                    <label class="search-type-option">
+                        <input type="radio" name="search-type" value="content" checked onchange="updateSearchType()">
+                        <span>本文検索</span>
+                    </label>
+                    <label class="search-type-option">
+                        <input type="radio" name="search-type" value="tag" onchange="updateSearchType()">
+                        <span>タグ検索</span>
+                    </label>
+                </div>
             </div>
             
             <div class="header-actions">
-                <button onclick="cycleTheme()" class="icon-btn theme-toggle" title="テーマ切り替え">
-                    <i id="theme-icon" class="fas fa-moon"></i>
+                <button onclick="cycleTheme()" class="icon-btn theme-toggle" title="テーマ切り替え" aria-label="テーマを切り替え">
+                    <i id="theme-icon" class="fas fa-moon" aria-hidden="true"></i>
                 </button>
-                <button onclick="fetchData(this)" class="icon-btn" title="最新情報に更新">
-                    <i class="fas fa-sync-alt"></i>
+                <button onclick="fetchData(this)" class="icon-btn" title="最新情報に更新" aria-label="最新情報に更新">
+                    <i class="fas fa-sync-alt" aria-hidden="true"></i>
                 </button>
             </div>
         </header>
 
-        <div id="post-form-container" class="post-area closed" style="display:block;">
-            <div class="post-header" onclick="togglePostForm()">
+        <section id="post-form-container" class="post-area closed" style="display:block;" aria-label="投稿フォーム" aria-expanded="false">
+            <div class="post-header" onclick="togglePostForm()" role="button" tabindex="0" aria-label="投稿フォームを開く/閉じる">
                 <div class="post-header-title">
-                    <i class="fas fa-bolt"></i> 新しい知見を共有
+                    <i class="fas fa-feather-alt" aria-hidden="true"></i> 精鋭ノートを書く
                 </div>
-                <i class="fas fa-chevron-down post-toggle-icon"></i>
+                <i class="fas fa-chevron-down post-toggle-icon" aria-hidden="true"></i>
             </div>
             
             <div class="post-content-wrapper">
                 <div class="input-row">
-                    <select id="input-region" disabled><option>エリアを選択</option></select>
-                    <select id="input-route"><option>ルートを選択</option></select>
+                    <input type="text" id="input-title" placeholder="タイトル" aria-label="投稿タイトル" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--fg-primary); font-size: 1.1em;">
+                </div>
+                <div class="input-row">
+                    <select id="input-region" disabled aria-label="地域を選択"><option>エリアを選択</option></select>
+                    <select id="input-route" aria-label="ルートを選択"><option>ルートを選択</option></select>
                 </div>
                 
                 <div class="tag-section">
                     <span class="tag-label">レギュレーション (必須)</span>
-                    <div class="tag-options">
-                        <label><input type="radio" name="tag_reg" value="NPuI"><span class="tag-radio-label">NPuI</span></label>
-                        <label><input type="radio" name="tag_reg" value="PuA"><span class="tag-radio-label">PuA</span></label>
-                        <label><input type="radio" name="tag_reg" value="PuI"><span class="tag-radio-label">PuI</span></label>
-                        <label><input type="radio" name="tag_reg" value="全般"><span class="tag-radio-label">全般</span></label>
+                    <div class="tag-options" role="radiogroup" aria-label="レギュレーション">
+                        <label><input type="radio" name="tag_reg" value="NPuI" aria-label="NPuI"><span class="tag-radio-label">NPuI</span></label>
+                        <label><input type="radio" name="tag_reg" value="PuA" aria-label="PuA"><span class="tag-radio-label">PuA</span></label>
+                        <label><input type="radio" name="tag_reg" value="PuI" aria-label="PuI"><span class="tag-radio-label">PuI</span></label>
+                        <label><input type="radio" name="tag_reg" value="全般" aria-label="全般"><span class="tag-radio-label">全般</span></label>
                     </div>
                     <span class="tag-label">Cost (必須)</span>
-                    <div class="tag-options">
-                        <label><input type="radio" name="tag_cost" value="制限なし"><span class="tag-radio-label">制限なし</span></label>
-                        <label><input type="radio" name="tag_cost" value="低凸"><span class="tag-radio-label">低凸</span></label>
-                        <label><input type="radio" name="tag_cost" value="Cost全般"><span class="tag-radio-label">全般</span></label>
+                    <div class="tag-options" role="radiogroup" aria-label="Cost">
+                        <label><input type="radio" name="tag_cost" value="制限なし" aria-label="制限なし"><span class="tag-radio-label">制限なし</span></label>
+                        <label><input type="radio" name="tag_cost" value="低凸" aria-label="低凸"><span class="tag-radio-label">低凸</span></label>
+                        <label><input type="radio" name="tag_cost" value="Cost全般" aria-label="Cost全般"><span class="tag-radio-label">全般</span></label>
                     </div>
                     <span class="tag-label">オプションタグ (自由選択)</span>
-                    <div class="tag-options">
-                        <label><input type="checkbox" name="tag_opt" value="誘導"><span class="tag-radio-label">誘導</span></label>
-                        <label><input type="checkbox" name="tag_opt" value="弓起動"><span class="tag-radio-label">弓起動</span></label>
-                        <label><input type="checkbox" name="tag_opt" value="処理法"><span class="tag-radio-label">処理法</span></label>
-                        <label><input type="checkbox" name="tag_opt" value="位置調整"><span class="tag-radio-label">位置調整</span></label>
-                        <label><input type="checkbox" name="tag_opt" value="コツ"><span class="tag-radio-label">コツ</span></label>
-                        <label><input type="checkbox" name="tag_opt" value="注意点"><span class="tag-radio-label">注意点</span></label>
+                    <div class="tag-options" role="group" aria-label="オプションタグ">
+                        <label><input type="checkbox" name="tag_opt" value="誘導" aria-label="誘導"><span class="tag-radio-label">誘導</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="弓起動" aria-label="弓起動"><span class="tag-radio-label">弓起動</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="処理法" aria-label="処理法"><span class="tag-radio-label">処理法</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="位置調整" aria-label="位置調整"><span class="tag-radio-label">位置調整</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="コツ" aria-label="コツ"><span class="tag-radio-label">コツ</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="注意点" aria-label="注意点"><span class="tag-radio-label">注意点</span></label>
                     </div>
                     <span class="tag-label">自由タグ (最大2つ)</span>
                     <div class="free-tags-row">
-                        <input type="text" id="tag-free-1" placeholder="自由タグ1">
-                        <input type="text" id="tag-free-2" placeholder="自由タグ2">
+                        <input type="text" id="tag-free-1" placeholder="自由タグ1" aria-label="自由タグ1">
+                        <input type="text" id="tag-free-2" placeholder="自由タグ2" aria-label="自由タグ2">
                     </div>
                 </div>
 
-                <textarea id="input-content" rows="3" placeholder="解説やYouTubeのURLを貼ってね！"></textarea>
+                <div class="editor-wrapper">
+                    <div class="editor-toolbar" role="toolbar" aria-label="テキストエディタツールバー">
+                        <button type="button" class="toolbar-btn" onclick="insertMarkdown('bold')" title="太字" aria-label="太字">
+                            <i class="fas fa-bold" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="insertMarkdown('italic')" title="イタリック" aria-label="イタリック">
+                            <i class="fas fa-italic" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="insertMarkdown('link')" title="リンク" aria-label="リンク">
+                            <i class="fas fa-link" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="insertMarkdown('code')" title="コード" aria-label="コード">
+                            <i class="fas fa-code" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="insertMarkdown('heading1')" title="見出し1" aria-label="見出し1">
+                            <i class="fas fa-heading" aria-hidden="true"></i> 1
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="insertMarkdown('heading2')" title="見出し2" aria-label="見出し2">
+                            <i class="fas fa-heading" aria-hidden="true"></i> 2
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="insertMarkdown('heading3')" title="見出し3" aria-label="見出し3">
+                            <i class="fas fa-heading" aria-hidden="true"></i> 3
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="insertMarkdown('list')" title="リスト" aria-label="リスト">
+                            <i class="fas fa-list-ul" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="toolbar-btn" onclick="insertMarkdown('quote')" title="引用" aria-label="引用">
+                            <i class="fas fa-quote-right" aria-hidden="true"></i>
+                        </button>
+                        <div class="toolbar-separator"></div>
+                        <span class="toolbar-hint" style="font-size: 0.8em; color: var(--comment);">Markdown記法が使えます</span>
+                    </div>
+                    <textarea id="input-content" rows="6" placeholder="解説やYouTube・Twitterのリンクを貼ってね！Markdown記法も使えるのよ。" aria-label="投稿内容"></textarea>
+                </div>
+                
+                <div id="drop-zone" class="drop-zone" role="region" aria-label="ファイルドロップエリア">
+                    <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                    <p>画像ファイルをドラッグ&ドロップするか、下のボタンから選択してほしいのよ</p>
+                </div>
                 
                 <div class="file-input-wrapper">
-                    <i class="fas fa-images"></i>
-                    <input type="file" id="input-image" accept="image/*" multiple>
+                    <i class="fas fa-images" aria-hidden="true"></i>
+                    <input type="file" id="input-image" accept="image/*" multiple aria-label="画像をアップロード">
                     <span style="font-size:0.8em;">※4枚まで (各2MB)</span>
                 </div>
-                <div id="image-preview" class="preview-area"></div>
+                <div id="image-preview" class="preview-area" role="region" aria-label="画像プレビュー"></div>
+                
+                <div style="margin-top: 15px; padding: 12px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+                    <p style="font-size: 0.9em; color: var(--comment); margin: 0 0 8px 0;">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i> 動画を共有する場合は、本文にYouTubeやTwitterのリンクを貼ってください。
+                    </p>
+                </div>
 
-                <div style="text-align: right;">
-                    <button onclick="postData()">投稿する</button>
+                <div class="password-section">
+                    <label for="input-password" class="tag-label">
+                        <i class="fas fa-lock" aria-hidden="true"></i> 投稿パスワード <span style="color: var(--accent);">（必須）</span>
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="input-password" placeholder="後から削除・編集する際に使用します" aria-label="投稿パスワード" required>
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility()" aria-label="パスワードを表示/非表示" title="パスワードを表示/非表示">
+                            <i class="fas fa-eye" id="password-toggle-icon" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <p class="password-hint">
+                        後からこの投稿を削除・編集する際に必要です。
+                    </p>
+                </div>
+
+                <div style="text-align: right; margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button id="cancel-edit-btn" onclick="cancelEditMode()" style="display: none; background-color: var(--bg-secondary); color: var(--text); border: 1px solid var(--border-color);" aria-label="編集をキャンセル">キャンセル</button>
+                    <button id="submit-post-btn" onclick="postData()" aria-label="投稿する">投稿する</button>
                 </div>
             </div>
+        </section>
+
+        <div class="content-scroll" role="main">
+            <div id="main-container" role="region" aria-label="投稿一覧"></div>
         </div>
 
-        <div class="content-scroll">
-            <div id="main-container"></div>
-        </div>
-
-        <footer>
+        <footer role="contentinfo">
             <div class="footer-content">
-                <p>当サイトは原神(Genshin Impact)の非公式ファンサイトなのよ。</p>
+                <p>当サイトは原神（Genshin Impact）の非公式ファンサイトなのよ。</p>
                 <p>
                     開発者: <a href="https://x.com/_c_aca" target="_blank">@_c_aca</a> | Powered by GAS
                 </p>
-                <p class="copyright">&copy; 2025 精鋭狩りRTA Knowledge Base</p>
+                <div class="footer-buttons">
+                    <button onclick="toggleAboutModal()" class="about-btn" aria-label="このサイトについてを開く">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i> このサイトについて
+                    </button>
+                    <button onclick="toggleContactForm()" class="contact-btn" aria-label="要望・問い合わせフォームを開く">
+                        <i class="fas fa-envelope" aria-hidden="true"></i> 要望・問い合わせ
+                    </button>
+                </div>
             </div>
         </footer>
     </main>
 
-    <div id="image-modal" class="image-modal" onclick="closeImageModal()">
-        <span class="modal-close">&times;</span>
-        <img class="modal-content" id="modal-image">
+    <div id="image-modal" class="image-modal" onclick="closeImageModal()" role="dialog" aria-modal="true" aria-labelledby="modal-image" aria-hidden="true" tabindex="-1">
+        <span class="modal-close" onclick="event.stopPropagation(); closeImageModal();" aria-label="閉じる" role="button" tabindex="0">&times;</span>
+        <img class="modal-content" id="modal-image" alt="拡大画像">
     </div>
 
+    <!-- このサイトについてモーダル -->
+    <div id="about-modal" class="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title" aria-hidden="true" tabindex="-1" onclick="if(event.target === this) closeAboutModal();">
+        <div class="about-modal-content" onclick="event.stopPropagation()">
+            <div class="about-modal-header">
+                <h3 id="about-modal-title">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i> このサイトについて
+                </h3>
+                <button class="modal-close" onclick="closeAboutModal()" aria-label="閉じる" role="button" tabindex="0">&times;</button>
+            </div>
+            <div class="about-modal-body">
+                <div class="about-section">
+                    <h4><i class="fas fa-feather-alt" aria-hidden="true"></i> 400EENoteとは</h4>
+                    <p>400EENoteは、原神（Genshin Impact）の非公式ファンサイト、精鋭狩りの知識・情報を共有するためのコミュニティプラットフォームなのよ。💉</p>
+                </div>
+                <div class="about-section">
+                    <h4><i class="fas fa-book" aria-hidden="true"></i> 主な機能</h4>
+                    <ul>
+                        <li><strong>投稿機能</strong>: テキスト、画像、YouTube・Twitter埋め込みで知見を共有</li>
+                        <li><strong>タグ付け</strong>: レギュレーション、Cost、自由タグで投稿を分類</li>
+                        <li><strong>検索機能</strong>: 全文検索とタグ検索で投稿を探せる</li>
+                        <li><strong>いいね・コメント</strong>: 投稿への反応や議論ができる</li>
+                        <li><strong>地域・ルート別表示</strong>: サイドバーから地域やルートを選んでフィルタリング</li>
+                    </ul>
+                </div>
+                <div class="about-section">
+                    <h4><i class="fas fa-palette" aria-hidden="true"></i> テーマ</h4>
+                    <p>3つのテーマから選べるのよ：</p>
+                    <ul>
+                        <li><strong>Dark (Dracula)</strong>: ダークテーマ</li>
+                        <li><strong>Light (Atom)</strong>: ライトテーマ</li>
+                        <li><strong>Sigewinne</strong>: おシグテーマ</li>
+                    </ul>
+                </div>
+                <div class="about-section">
+                    <h4><i class="fas fa-shield-alt" aria-hidden="true"></i> プライバシー</h4>
+                    <p>投稿にはパスワードを設定できて、自分だけが編集・削除できるようになっているのよ。
+                    <br>
+                    パスワードは暗号化して保存しているけど、他のサイトで使うような普段使いのパスワードを使うのはｵｽｽﾒしないわね。
+                    <br>
+                    アクセスログも問題ない範囲で収集しているけど、個人を特定できる情報は含まれていないわ。</p>
+                </div>
+                <div class="about-section">
+                    <h4><i class="fas fa-code" aria-hidden="true"></i> 技術情報</h4>
+                    <p>このサイトは以下の技術で作られているのよ：</p>
+                    <ul>
+                        <li><strong>フロントエンド</strong>: HTML5, CSS3, Vanilla JavaScript</li>
+                        <li><strong>バックエンド</strong>: Google Apps Script (GAS)</li>
+                        <li><strong>データベース</strong>: Google Spreadsheet</li>
+                        <li><strong>ストレージ</strong>: Google Drive（画像保存）</li>
+                        <li><strong>ホスティング</strong>: GitHub Pages</li>
+                    </ul>
+                </div>
+                <div class="about-section">
+                    <h4><i class="fas fa-user-circle" aria-hidden="true"></i> 開発者</h4>
+                    <p>開発者: <a href="https://x.com/_c_aca" target="_blank" rel="noopener noreferrer">@_c_aca</a></p>
+                    <p>要望やバグ報告は「要望・問い合わせ」フォームから送ってね。</p>
+                </div>
+            </div>
+            <div class="about-modal-footer">
+                <button onclick="closeAboutModal()" class="about-close-btn" aria-label="閉じる">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 要望・問い合わせフォームモーダル -->
+    <div id="contact-modal" class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title" aria-hidden="true" tabindex="-1">
+        <div class="contact-modal-content" onclick="event.stopPropagation()">
+            <div class="contact-modal-header">
+                <h3 id="contact-modal-title">
+                    <i class="fas fa-envelope" aria-hidden="true"></i> 要望・問い合わせ
+                </h3>
+                <button class="modal-close" onclick="closeContactForm()" aria-label="閉じる" role="button" tabindex="0">&times;</button>
+            </div>
+            <form id="contact-form" onsubmit="submitContact(event)" aria-label="要望・問い合わせフォーム">
+                <div class="contact-form-group">
+                    <label for="contact-name">お名前（任意）</label>
+                    <input type="text" id="contact-name" placeholder="お名前" aria-label="お名前">
+                </div>
+                <div class="contact-form-group">
+                    <label for="contact-type">種類 <span style="color: var(--red);">*</span></label>
+                    <select id="contact-type" required aria-label="問い合わせ種類">
+                        <option value="">選択してください</option>
+                        <option value="要望">要望</option>
+                        <option value="バグ報告">バグ報告</option>
+                        <option value="質問">質問</option>
+                        <option value="その他">その他</option>
+                    </select>
+                </div>
+                <div class="contact-form-group">
+                    <label for="contact-message">内容 <span style="color: var(--red);">*</span></label>
+                    <textarea id="contact-message" rows="8" placeholder="要望や問い合わせ内容を入力してください..." required aria-label="問い合わせ内容"></textarea>
+                </div>
+                <div class="contact-form-actions">
+                    <button type="button" onclick="closeContactForm()" class="contact-cancel-btn" aria-label="キャンセル">キャンセル</button>
+                    <button type="submit" class="contact-submit-btn" aria-label="送信">送信</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
