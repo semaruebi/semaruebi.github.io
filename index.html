@@ -108,6 +108,13 @@
                         <input type="text" id="tag-free-1" placeholder="自由に書いていいのよ" aria-label="自由タグ1">
                         <input type="text" id="tag-free-2" placeholder="もう1つ追加できるわ" aria-label="自由タグ2">
                     </div>
+                    <span class="tag-label">精鋭 (任意)</span>
+                    <div style="margin-top: 10px;">
+                        <button type="button" onclick="openEliteEnemyModal()" class="elite-enemy-btn" aria-label="精鋭を選択">
+                            <i class="fas fa-dragon" aria-hidden="true"></i> 精鋭を選択する
+                        </button>
+                        <div id="selected-elite-enemies" class="selected-elite-enemies" style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;"></div>
+                    </div>
                 </div>
 
                 <div class="editor-wrapper">
@@ -159,7 +166,7 @@
                 
                 <div style="margin-top: 15px; padding: 12px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border-color);">
                     <p style="font-size: 0.9em; color: var(--comment); margin: 0 0 8px 0;">
-                        <i class="fas fa-info-circle" aria-hidden="true"></i> 動画を共有する場合は、本文にYouTubeやTwitterのリンクを貼ってくださいなのよ
+                        <i class="fas fa-info-circle" aria-hidden="true"></i> 動画を共有する場合は、本文にYouTubeやTwitterのリンクを貼るのよ
                     </p>
                 </div>
 
@@ -174,7 +181,7 @@
                         </button>
                     </div>
                     <p class="password-hint">
-                        後からこの投稿を削除・編集する際に必要です。
+                        後からこの投稿を削除・編集する際に必要なのよ。
                     </p>
                 </div>
 
@@ -337,6 +344,24 @@
         </div>
     </div>
 
+    <!-- 精鋭選択モーダル -->
+    <div id="elite-enemy-modal" class="elite-enemy-modal" role="dialog" aria-modal="true" aria-labelledby="elite-enemy-modal-title" aria-hidden="true" tabindex="-1" onclick="if(event.target === this) closeEliteEnemyModal();">
+        <div class="elite-enemy-modal-content" onclick="event.stopPropagation()">
+            <div class="elite-enemy-modal-header">
+                <h3 id="elite-enemy-modal-title">
+                    <i class="fas fa-dragon" aria-hidden="true"></i> 精鋭を選択
+                </h3>
+                <button class="modal-close" onclick="closeEliteEnemyModal()" aria-label="閉じる" role="button" tabindex="0">&times;</button>
+            </div>
+            <div class="elite-enemy-modal-body" id="elite-enemy-list">
+                <!-- 精鋭データがここに動的に挿入されます -->
+            </div>
+            <div class="elite-enemy-modal-footer">
+                <button onclick="closeEliteEnemyModal()" class="elite-confirm-btn" aria-label="選択を確定">選択を確定</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/config.js"></script>
     <!-- JavaScript分割版 -->
     <script src="js/utils.js"></script>
@@ -350,6 +375,7 @@
     <script src="js/card-expand.js"></script>
     <script src="js/navigation.js"></script>
     <script src="js/drag-scroll.js"></script>
+    <script src="js/elite-enemy.js"></script>
     <script src="js/post.js"></script>
     <script src="js/main.js"></script>
 </body>

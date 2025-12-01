@@ -3,7 +3,7 @@
 // ============================================
 
 // グローバル変数（他のファイルからもアクセス可能）
-let allData = { routes: [], posts: [], comments: [] };
+let allData = { routes: [], posts: [], comments: [], eliteEnemies: [] };
 
 /**
  * データ取得（リトライ機能付き）
@@ -52,6 +52,7 @@ async function fetchData(btnElement = null) {
                 postsCount: data.posts ? data.posts.length : 0,
                 routesCount: data.routes ? data.routes.length : 0,
                 commentsCount: data.comments ? data.comments.length : 0,
+                eliteEnemiesCount: data.eliteEnemies ? data.eliteEnemies.length : 0,
                 firstPost: data.posts && data.posts.length > 0 ? data.posts[0] : null
             });
             

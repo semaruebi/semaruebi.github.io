@@ -131,10 +131,12 @@ footer p { margin: 3px 0; }
 
 .about-btn {
     background: var(--cyan);
+    color: var(--bg-sidebar);
 }
 
 .about-btn:hover {
     background: color-mix(in srgb, var(--cyan) 80%, black);
+    color: white;
 }
 
 /* トースト通知システム */

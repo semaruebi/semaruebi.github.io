@@ -577,3 +577,139 @@ body.modal-open { overflow: hidden; }
     background: var(--border-color);
 }
 
+/* 精鋭選択モーダル */
+.elite-enemy-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+}
+
+.elite-enemy-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.elite-enemy-modal-content {
+    background: var(--bg-sidebar);
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    width: 90%;
+    max-width: 800px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow);
+    animation: modalFadeIn 0.2s ease;
+}
+
+.elite-enemy-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--current-line);
+    flex-shrink: 0;
+}
+
+.elite-enemy-modal-header h3 {
+    margin: 0;
+    color: var(--purple);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3em;
+}
+
+.elite-enemy-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.elite-category {
+    margin-bottom: 30px;
+}
+
+.elite-category:last-child {
+    margin-bottom: 0;
+}
+
+.elite-category-title {
+    color: var(--cyan);
+    font-size: 1.1em;
+    margin: 0 0 15px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--cyan);
+    font-family: var(--font-display);
+}
+
+.elite-enemies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.elite-enemy-item {
+    padding: 10px 15px;
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95em;
+    color: var(--fg-primary);
+    text-align: center;
+    font-weight: 500;
+}
+
+.elite-enemy-item:hover {
+    border-color: var(--purple);
+    background: var(--current-line);
+    transform: translateY(-2px);
+}
+
+.elite-enemy-item.selected {
+    background: var(--purple);
+    border-color: var(--purple);
+    color: white;
+    font-weight: bold;
+}
+
+.elite-enemy-modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.elite-confirm-btn {
+    padding: 10px 30px;
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.elite-confirm-btn:hover {
+    background: var(--pink);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+

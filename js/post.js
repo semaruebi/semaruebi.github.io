@@ -43,7 +43,10 @@ function validatePostForm(isUpdate = false) {
     if (free1) tagsOpt.push(free1);
     if (free2) tagsOpt.push(free2);
     
-    const allTags = [tagReg, tagCost, ...tagsOpt];
+    // 精鋭タグも追加
+    const eliteEnemyTags = selectedEliteEnemies || [];
+    
+    const allTags = [tagReg, tagCost, ...tagsOpt, ...eliteEnemyTags];
     
     if (!password) {
         showToast("パスワードを入力してちょうだい。後から削除・編集する際に必要なのよ。", 'warning');
@@ -145,6 +148,11 @@ async function postData() {
         if (passwordInput) passwordInput.value = "";
         document.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(el => el.checked = false);
         
+        // 精鋭タグもクリア
+        if (typeof clearSelectedEliteEnemies === 'function') {
+            clearSelectedEliteEnemies();
+        }
+        
         togglePostForm();
         setTimeout(() => fetchData(), 2000);
     } catch (err) {
@@ -211,6 +219,7 @@ async function editPost(id) {
     if (contentInput) contentInput.value = post.content || "";
     
     // タグを設定
+    const eliteTags = [];
     if (post.tags) {
         const tags = post.tags.split(',');
         tags.forEach(tag => {
@@ -218,22 +227,42 @@ async function editPost(id) {
             if (!trimmed) return;
             
             const regRadio = document.querySelector(`input[name="tag_reg"][value="${trimmed}"]`);
-            if (regRadio) regRadio.checked = true;
+            if (regRadio) {
+                regRadio.checked = true;
+                return;
+            }
             
             const costRadio = document.querySelector(`input[name="tag_cost"][value="${trimmed}"]`);
-            if (costRadio) costRadio.checked = true;
+            if (costRadio) {
+                costRadio.checked = true;
+                return;
+            }
             
             const optCheckbox = document.querySelector(`input[name="tag_opt"][value="${trimmed}"]`);
-            if (optCheckbox) optCheckbox.checked = true;
+            if (optCheckbox) {
+                optCheckbox.checked = true;
+                return;
+            }
             
             const free1Input = document.getElementById('tag-free-1');
             const free2Input = document.getElementById('tag-free-2');
-            if (free1Input && !free1Input.value && !regRadio && !costRadio && !optCheckbox) {
+            if (free1Input && !free1Input.value) {
                 free1Input.value = trimmed;
-            } else if (free2Input && !free2Input.value && !regRadio && !costRadio && !optCheckbox) {
-                free2Input.value = trimmed;
+                return;
             }
+            if (free2Input && !free2Input.value) {
+                free2Input.value = trimmed;
+                return;
+            }
+            
+            // それ以外は精鋭タグとして扱う
+            eliteTags.push(trimmed);
         });
+    }
+    
+    // 精鋭タグを復元
+    if (typeof loadEliteEnemiesForEdit === 'function') {
+        loadEliteEnemiesForEdit(eliteTags.join(','));
     }
     
     // 既存の画像URLを設定
@@ -287,6 +316,11 @@ function cancelEditMode() {
     // タグをリセット
     document.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(el => el.checked = false);
     const free1Input = document.getElementById("tag-free-1");
+    
+    // 精鋭タグもクリア
+    if (typeof clearSelectedEliteEnemies === 'function') {
+        clearSelectedEliteEnemies();
+    }
     const free2Input = document.getElementById("tag-free-2");
     if (free1Input) free1Input.value = "";
     if (free2Input) free2Input.value = "";
@@ -396,6 +430,11 @@ async function updatePost(id, password) {
         const passwordInput = document.getElementById("input-password");
         if (passwordInput) passwordInput.value = "";
         document.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(el => el.checked = false);
+        
+        // 精鋭タグもクリア
+        if (typeof clearSelectedEliteEnemies === 'function') {
+            clearSelectedEliteEnemies();
+        }
         
         // ボタンを元に戻す
         const submitBtn = document.getElementById("submit-post-btn");

@@ -782,6 +782,64 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 
 .free-tags-row input { flex: 1; }
 
+/* 精鋭選択ボタン */
+.elite-enemy-btn {
+    padding: 12px 24px;
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.elite-enemy-btn:hover {
+    background: var(--pink);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 選択された精鋭タグ */
+.selected-elite-enemies {
+    min-height: 24px;
+}
+
+.selected-elite-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--purple);
+    color: white;
+    border-radius: 16px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.remove-elite-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.remove-elite-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 .file-input-wrapper { margin-bottom: 15px; font-size: 0.9em; color: var(--comment); display: flex; align-items: center; gap: 10px; background: var(--bg-main); padding: 10px; border-radius: 8px;}
 
 /* ドロップゾーン */
