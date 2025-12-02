@@ -10,27 +10,27 @@ let editingPostData = null;
  * フォームのバリデーション処理
  */
 function validatePostForm(isUpdate = false) {
-    const title = document.getElementById("input-title")?.value.trim() || "";
-    const region = document.getElementById("input-region")?.value || "";
-    const route = document.getElementById("input-route")?.value || "";
-    const content = document.getElementById("input-content")?.value.trim() || "";
-    const password = document.getElementById("input-password")?.value.trim() || "";
+    const title = document.getElementById('input-title')?.value.trim() || '';
+    const region = document.getElementById('input-region')?.value || '';
+    const route = document.getElementById('input-route')?.value || '';
+    const content = document.getElementById('input-content')?.value.trim() || '';
+    const password = document.getElementById('input-password')?.value.trim() || '';
     
     if (!title) {
-        showToast("タイトルを入力してちょうだい。", 'warning');
+        showToast('タイトルを入力してちょうだい。', 'warning');
         return null;
     }
     
     const regEl = document.querySelector('input[name="tag_reg"]:checked');
     if (!regEl) {
-        showToast("「レギュレーション」を選択してちょうだい。健康管理はウチが担当するのよ。", 'warning');
+        showToast('「レギュレーション」を選択してちょうだい。健康管理はウチが担当するのよ。', 'warning');
         return null;
     }
     const tagReg = regEl.value;
     
     const costEl = document.querySelector('input[name="tag_cost"]:checked');
     if (!costEl) {
-        showToast("「Cost」を選択してちょうだい。健康管理はウチが担当するのよ。", 'warning');
+        showToast('「Cost」を選択してちょうだい。健康管理はウチが担当するのよ。', 'warning');
         return null;
     }
     const tagCost = costEl.value;
@@ -38,8 +38,8 @@ function validatePostForm(isUpdate = false) {
     const optEls = document.querySelectorAll('input[name="tag_opt"]:checked');
     const tagsOpt = Array.from(optEls).map(el => el.value);
     
-    const free1 = document.getElementById('tag-free-1')?.value.trim() || "";
-    const free2 = document.getElementById('tag-free-2')?.value.trim() || "";
+    const free1 = document.getElementById('tag-free-1')?.value.trim() || '';
+    const free2 = document.getElementById('tag-free-2')?.value.trim() || '';
     if (free1) tagsOpt.push(free1);
     if (free2) tagsOpt.push(free2);
     
@@ -49,13 +49,13 @@ function validatePostForm(isUpdate = false) {
     const allTags = [tagReg, tagCost, ...tagsOpt, ...eliteEnemyTags];
     
     if (!password) {
-        showToast("パスワードを入力してちょうだい。後から削除・編集する際に必要なのよ。", 'warning');
+        showToast('パスワードを入力してちょうだい。後から削除・編集する際に必要なのよ。', 'warning');
         return null;
     }
     
     const totalImages = existingImageUrls.length + selectedImageFiles.length;
     if (!region || !route || (!content && totalImages === 0)) {
-        showToast("内容を入力してちょうだい。見せてちょうだい。", 'warning');
+        showToast('内容を入力してちょうだい。見せてちょうだい。', 'warning');
         return null;
     }
     
@@ -66,7 +66,7 @@ function validatePostForm(isUpdate = false) {
     
     for (let f of selectedImageFiles) {
         if (f.size > CONFIG.MAX_IMAGE_SIZE) {
-            showToast("2MB以下の画像にしてちょうだい。", 'warning');
+            showToast('2MB以下の画像にしてちょうだい。', 'warning');
             return null;
         }
     }
@@ -77,11 +77,11 @@ function validatePostForm(isUpdate = false) {
 async function postData() {
     // 既に投稿処理中の場合は無視
     if (isPosting) {
-        showToast("投稿処理中よ。じっとしててね…", 'warning');
+        showToast('投稿処理中よ。じっとしててね…', 'warning');
         return;
     }
     
-    const btn = document.querySelector("#post-form-container button");
+    const btn = document.querySelector('#post-form-container button');
     if (!btn) return;
     
     // バリデーションチェック
@@ -114,11 +114,11 @@ async function postData() {
         }
         
         await fetchWithRetry(CONFIG.GAS_API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                action: "create",
+                action: 'create',
                 title: formData.title,
                 region: formData.region,
                 route: formData.route,
@@ -129,23 +129,23 @@ async function postData() {
             })
         });
         
-        showToast("投稿完了なのよ！診断結果は、今すぐお注射…じゃなくて、反映待ちね。", 'success');
+        showToast('投稿完了なのよ！診断結果は、今すぐお注射…じゃなくて、反映待ちね。', 'success');
         
         // フォームリセット
-        const titleInput = document.getElementById("input-title");
-        if (titleInput) titleInput.value = "";
-        const contentInput = document.getElementById("input-content");
-        if (contentInput) contentInput.value = "";
+        const titleInput = document.getElementById('input-title');
+        if (titleInput) titleInput.value = '';
+        const contentInput = document.getElementById('input-content');
+        if (contentInput) contentInput.value = '';
         selectedImageFiles = [];
         updateImagePreview();
-        const imageInput = document.getElementById("input-image");
-        if (imageInput) imageInput.value = "";
-        const free1Input = document.getElementById("tag-free-1");
-        if (free1Input) free1Input.value = "";
-        const free2Input = document.getElementById("tag-free-2");
-        if (free2Input) free2Input.value = "";
-        const passwordInput = document.getElementById("input-password");
-        if (passwordInput) passwordInput.value = "";
+        const imageInput = document.getElementById('input-image');
+        if (imageInput) imageInput.value = '';
+        const free1Input = document.getElementById('tag-free-1');
+        if (free1Input) free1Input.value = '';
+        const free2Input = document.getElementById('tag-free-2');
+        if (free2Input) free2Input.value = '';
+        const passwordInput = document.getElementById('input-password');
+        if (passwordInput) passwordInput.value = '';
         document.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(el => el.checked = false);
         
         // 精鋭タグもクリア
@@ -156,8 +156,8 @@ async function postData() {
         togglePostForm();
         setTimeout(() => fetchData(), 2000);
     } catch (err) {
-        console.error("Post error:", err);
-        showToast("あら、投稿に失敗しちゃったみたい。もう一度試してみてちょうだい", 'error');
+        console.error('Post error:', err);
+        showToast('あら、投稿に失敗しちゃったみたい。もう一度試してみてちょうだい', 'error');
     } finally {
         isPosting = false;
         btn.disabled = originalDisabled;
@@ -168,23 +168,23 @@ async function postData() {
 }
 
 async function deletePost(id) {
-    const password = prompt("削除パスワードを見せてちょうだい。\n（投稿時に設定したパスワード、または管理者パスワード）");
+    const password = prompt('削除パスワードを見せてちょうだい。\n（投稿時に設定したパスワード、または管理者パスワード）');
     if (!password) return;
     
-    if (!confirm("本当に削除するの？もう、治らないみたい…になっちゃうわよ？")) return;
+    if (!confirm('本当に削除するの？もう、治らないみたい…になっちゃうわよ？')) return;
     
     try {
         await fetchWithRetry(CONFIG.GAS_API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "delete", id: id, password: password })
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'delete', id: id, password: password })
         });
         
-        showToast("削除リクエストを送ったわ。あわあわ～しないで待っててね。", 'success');
+        showToast('削除リクエストを送ったわ。あわあわ～しないで待っててね。', 'success');
         setTimeout(() => fetchData(), 1500);
     } catch (err) {
-        showToast("パスワードが違うみたい。もしかしてワルい子？", 'error');
+        showToast('パスワードが違うみたい。もしかしてワルい子？', 'error');
     }
 }
 
@@ -192,12 +192,12 @@ async function editPost(id) {
     // 投稿データを取得
     const post = allData.posts.find(p => p.id === id);
     if (!post) {
-        showToast("あら、その投稿は見つからなかったわ", 'error');
+        showToast('あら、その投稿は見つからなかったわ', 'error');
         return;
     }
     
     // パスワード確認
-    const password = prompt("編集パスワードを見せてちょうだい。\n（投稿時に設定したパスワード、または管理者パスワード）");
+    const password = prompt('編集パスワードを見せてちょうだい。\n（投稿時に設定したパスワード、または管理者パスワード）');
     if (!password) return;
     
     // 編集モードに切り替え
@@ -213,10 +213,10 @@ async function editPost(id) {
     
     setupFormOptions();
     
-    const titleInput = document.getElementById("input-title");
-    if (titleInput) titleInput.value = post.title || "";
-    const contentInput = document.getElementById("input-content");
-    if (contentInput) contentInput.value = post.content || "";
+    const titleInput = document.getElementById('input-title');
+    if (titleInput) titleInput.value = post.title || '';
+    const contentInput = document.getElementById('input-content');
+    if (contentInput) contentInput.value = post.content || '';
     
     // タグを設定
     const eliteTags = [];
@@ -275,18 +275,18 @@ async function editPost(id) {
     updateImagePreview();
     
     // 投稿ボタンのテキストを変更
-    const submitBtn = document.getElementById("submit-post-btn");
-    const cancelBtn = document.getElementById("cancel-edit-btn");
+    const submitBtn = document.getElementById('submit-post-btn');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
     if (submitBtn) {
-        submitBtn.innerText = "更新する";
+        submitBtn.innerText = '更新する';
         submitBtn.setAttribute('aria-label', '投稿を更新する');
         submitBtn.onclick = () => updatePost(id, password);
     }
     if (cancelBtn) {
-        cancelBtn.style.display = "inline-block";
+        cancelBtn.style.display = 'inline-block';
     }
     
-    showToast("編集モードになったのよ。内容を変更して「更新する」を押してね", 'success');
+    showToast('編集モードになったのよ。内容を変更して「更新する」を押してね', 'success');
     
     // フォームまでスクロール
     form?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -295,7 +295,7 @@ async function editPost(id) {
 function cancelEditMode() {
     if (!editingPostId) return;
     
-    if (!confirm("編集をキャンセルしますかなのよ。入力した内容は失われちゃうけど、いいの？")) {
+    if (!confirm('編集をキャンセルしますかなのよ。入力した内容は失われちゃうけど、いいの？')) {
         return;
     }
     
@@ -304,62 +304,62 @@ function cancelEditMode() {
     editingPostData = null;
     
     // フォームをリセット
-    const titleInput = document.getElementById("input-title");
-    const regionSelect = document.getElementById("input-region");
-    const routeSelect = document.getElementById("input-route");
-    const contentInput = document.getElementById("input-content");
-    if (titleInput) titleInput.value = "";
-    if (regionSelect) regionSelect.value = "";
-    if (routeSelect) routeSelect.value = "";
-    if (contentInput) contentInput.value = "";
+    const titleInput = document.getElementById('input-title');
+    const regionSelect = document.getElementById('input-region');
+    const routeSelect = document.getElementById('input-route');
+    const contentInput = document.getElementById('input-content');
+    if (titleInput) titleInput.value = '';
+    if (regionSelect) regionSelect.value = '';
+    if (routeSelect) routeSelect.value = '';
+    if (contentInput) contentInput.value = '';
     
     // タグをリセット
     document.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(el => el.checked = false);
-    const free1Input = document.getElementById("tag-free-1");
+    const free1Input = document.getElementById('tag-free-1');
     
     // 精鋭タグもクリア
     if (typeof clearSelectedEliteEnemies === 'function') {
         clearSelectedEliteEnemies();
     }
-    const free2Input = document.getElementById("tag-free-2");
-    if (free1Input) free1Input.value = "";
-    if (free2Input) free2Input.value = "";
+    const free2Input = document.getElementById('tag-free-2');
+    if (free1Input) free1Input.value = '';
+    if (free2Input) free2Input.value = '';
     
     // 画像をリセット
     selectedImageFiles = [];
     existingImageUrls = [];
     updateImagePreview();
     
-    const imageInput = document.getElementById("input-image");
-    if (imageInput) imageInput.value = "";
+    const imageInput = document.getElementById('input-image');
+    if (imageInput) imageInput.value = '';
     
     // パスワードをリセット
-    const passwordInput = document.getElementById("input-password");
-    if (passwordInput) passwordInput.value = "";
+    const passwordInput = document.getElementById('input-password');
+    if (passwordInput) passwordInput.value = '';
     
     // ボタンを元に戻す
-    const submitBtn = document.getElementById("submit-post-btn");
-    const cancelBtn = document.getElementById("cancel-edit-btn");
+    const submitBtn = document.getElementById('submit-post-btn');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
     if (submitBtn) {
-        submitBtn.innerText = "投稿する";
+        submitBtn.innerText = '投稿する';
         submitBtn.setAttribute('aria-label', '投稿する');
         submitBtn.onclick = () => postData();
     }
     if (cancelBtn) {
-        cancelBtn.style.display = "none";
+        cancelBtn.style.display = 'none';
     }
     
-    showToast("編集をキャンセルしたわよ", 'info');
+    showToast('編集をキャンセルしたわよ', 'info');
 }
 
 async function updatePost(id, password) {
     // 既に投稿処理中の場合は無視
     if (isPosting) {
-        showToast("投稿処理中よ。じっとしててね…", 'warning');
+        showToast('投稿処理中よ。じっとしててね…', 'warning');
         return;
     }
     
-    const btn = document.querySelector("#post-form-container button");
+    const btn = document.querySelector('#post-form-container button');
     if (!btn) return;
     
     // バリデーションチェック
@@ -392,11 +392,11 @@ async function updatePost(id, password) {
         }
         
         await fetchWithRetry(CONFIG.GAS_API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                action: "update",
+                action: 'update',
                 id: id,
                 title: formData.title,
                 region: formData.region,
@@ -409,26 +409,26 @@ async function updatePost(id, password) {
             })
         });
         
-        showToast("更新完了なのよ！", 'success');
+        showToast('更新完了なのよ！', 'success');
         
         // フォームリセット
         editingPostId = null;
         editingPostData = null;
-        const titleInput = document.getElementById("input-title");
-        if (titleInput) titleInput.value = "";
-        const contentInput = document.getElementById("input-content");
-        if (contentInput) contentInput.value = "";
+        const titleInput = document.getElementById('input-title');
+        if (titleInput) titleInput.value = '';
+        const contentInput = document.getElementById('input-content');
+        if (contentInput) contentInput.value = '';
         selectedImageFiles = [];
         existingImageUrls = [];
         updateImagePreview();
-        const imageInput = document.getElementById("input-image");
-        if (imageInput) imageInput.value = "";
-        const free1Input = document.getElementById("tag-free-1");
-        if (free1Input) free1Input.value = "";
-        const free2Input = document.getElementById("tag-free-2");
-        if (free2Input) free2Input.value = "";
-        const passwordInput = document.getElementById("input-password");
-        if (passwordInput) passwordInput.value = "";
+        const imageInput = document.getElementById('input-image');
+        if (imageInput) imageInput.value = '';
+        const free1Input = document.getElementById('tag-free-1');
+        if (free1Input) free1Input.value = '';
+        const free2Input = document.getElementById('tag-free-2');
+        if (free2Input) free2Input.value = '';
+        const passwordInput = document.getElementById('input-password');
+        if (passwordInput) passwordInput.value = '';
         document.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(el => el.checked = false);
         
         // 精鋭タグもクリア
@@ -437,22 +437,22 @@ async function updatePost(id, password) {
         }
         
         // ボタンを元に戻す
-        const submitBtn = document.getElementById("submit-post-btn");
-        const cancelBtn = document.getElementById("cancel-edit-btn");
+        const submitBtn = document.getElementById('submit-post-btn');
+        const cancelBtn = document.getElementById('cancel-edit-btn');
         if (submitBtn) {
-            submitBtn.innerText = "投稿する";
+            submitBtn.innerText = '投稿する';
             submitBtn.setAttribute('aria-label', '投稿する');
             submitBtn.onclick = () => postData();
         }
         if (cancelBtn) {
-            cancelBtn.style.display = "none";
+            cancelBtn.style.display = 'none';
         }
         
         togglePostForm();
         setTimeout(() => fetchData(), 2000);
     } catch (err) {
-        console.error("Update error:", err);
-        showToast("パスワードが違うみたい。もしかしてワルい子？", 'error');
+        console.error('Update error:', err);
+        showToast('パスワードが違うみたい。もしかしてワルい子？', 'error');
     } finally {
         isPosting = false;
         btn.disabled = originalDisabled;
@@ -463,8 +463,8 @@ async function updatePost(id, password) {
 }
 
 function setupFormOptions() {
-    const regionSelect = document.getElementById("input-region");
-    const routeSelect = document.getElementById("input-route");
+    const regionSelect = document.getElementById('input-region');
+    const routeSelect = document.getElementById('input-route');
     if (!regionSelect) return;
     
     // 地域選択のオプションを設定
@@ -495,7 +495,7 @@ function setupFormOptions() {
 }
 
 function updateRouteOptions(region) {
-    const routeSelect = document.getElementById("input-route");
+    const routeSelect = document.getElementById('input-route');
     if (!routeSelect) return;
     
     const routes = allData.routes ? allData.routes.filter(r => r.region === region) : [];

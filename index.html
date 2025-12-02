@@ -53,6 +53,15 @@
                 </div>
             </div>
             
+            <div class="sort-selector">
+                <select id="sort-select" onchange="changeSortType(this.value)" aria-label="並び替え" title="並び替え">
+                    <option value="date_desc">📅 新しい順</option>
+                    <option value="date_asc">📅 古い順</option>
+                    <option value="likes_desc">❤️ いいね順</option>
+                    <option value="comments_desc">💬 コメント順</option>
+                </select>
+            </div>
+            
             <div class="header-actions">
                 <button onclick="cycleTheme()" class="icon-btn theme-toggle" title="テーマ切り替え" aria-label="テーマを切り替え">
                     <i id="theme-icon" class="fas fa-moon" aria-hidden="true"></i>
@@ -374,13 +383,15 @@
     <script src="js/modal.js"></script>
     <script src="js/search.js"></script>
     <script src="js/image.js"></script>
+    <script src="js/elite-enemy-images.js"></script>
+    <script src="js/elite-enemy.js"></script>
+    <script src="js/bookmark.js"></script>
+    <script src="js/stats.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/card.js"></script>
     <script src="js/card-expand.js"></script>
     <script src="js/navigation.js"></script>
     <script src="js/drag-scroll.js"></script>
-    <script src="js/elite-enemy-images.js"></script>
-    <script src="js/elite-enemy.js"></script>
     <script src="js/post.js"></script>
     <script src="js/main.js"></script>
 </body>

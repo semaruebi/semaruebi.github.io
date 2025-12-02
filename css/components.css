@@ -18,11 +18,18 @@
     animation: cardFadeIn 0.6s ease-out backwards;
 }
 
+.card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--cyan);
+    border-left-color: var(--purple);
+}
+
 @keyframes cardFadeIn {
     from {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -89,7 +96,7 @@
     font-size: 1.5em;
     font-weight: 700;
     color: var(--pink);
-    margin: 0 0 15px 0;
+    margin: 0 0 15px;
     padding-bottom: 12px;
     border-bottom: 2px solid var(--border-color);
     line-height: 1.4;
@@ -502,17 +509,17 @@
 
 .card-content li { margin: 5px 0; }
 
-.card-content h1 { font-size: 2em; font-weight: bold; color: var(--pink); margin: 20px 0 15px 0; border-bottom: 2px solid var(--pink); padding-bottom: 8px; }
+.card-content h1 { font-size: 2em; font-weight: bold; color: var(--pink); margin: 20px 0 15px; border-bottom: 2px solid var(--pink); padding-bottom: 8px; }
 
-.card-content h2 { font-size: 1.6em; font-weight: bold; color: var(--purple); margin: 18px 0 12px 0; border-bottom: 2px solid var(--purple); padding-bottom: 6px; }
+.card-content h2 { font-size: 1.6em; font-weight: bold; color: var(--purple); margin: 18px 0 12px; border-bottom: 2px solid var(--purple); padding-bottom: 6px; }
 
-.card-content h3 { font-size: 1.3em; font-weight: bold; color: var(--cyan); margin: 15px 0 10px 0; }
+.card-content h3 { font-size: 1.3em; font-weight: bold; color: var(--cyan); margin: 15px 0 10px; }
 
-.card-content h4 { font-size: 1.15em; font-weight: bold; color: var(--orange); margin: 12px 0 8px 0; }
+.card-content h4 { font-size: 1.15em; font-weight: bold; color: var(--orange); margin: 12px 0 8px; }
 
-.card-content h5 { font-size: 1.05em; font-weight: bold; color: var(--green); margin: 10px 0 6px 0; }
+.card-content h5 { font-size: 1.05em; font-weight: bold; color: var(--green); margin: 10px 0 6px; }
 
-.card-content h6 { font-size: 1em; font-weight: bold; color: var(--comment); margin: 8px 0 4px 0; }
+.card-content h6 { font-size: 1em; font-weight: bold; color: var(--comment); margin: 8px 0 4px; }
 
 /* 画像ギャラリー */
 .image-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
@@ -543,19 +550,89 @@
     display: flex; 
     align-items: center; 
     gap: 8px; 
-    transition: 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: visible;
 }
 
 .like-btn:hover { 
     background: var(--current-line); 
     border-color: var(--pink); 
-    color: var(--pink); 
+    color: var(--pink);
+    transform: translateY(-2px);
+}
+
+.like-btn:active {
+    transform: scale(0.95);
 }
 
 .like-btn.liked { 
     color: var(--pink); 
     border-color: var(--pink); 
-    background: rgba(255, 64, 129, 0.1); 
+    background: rgba(255, 64, 129, 0.1);
+    animation: likePulse 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.like-btn.liked i {
+    animation: heartBeat 0.5s ease;
+}
+
+@keyframes likePulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes heartBeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.3);
+    }
+
+    50% {
+        transform: scale(1.1) rotate(-10deg);
+    }
+
+    75% {
+        transform: scale(1.3) rotate(10deg);
+    }
+}
+
+/* いいね時のパーティクルエフェクト */
+.like-btn.liked::after {
+    content: '❤️';
+    position: absolute;
+    font-size: 1.5em;
+    animation: likeParticle 0.8s ease-out;
+    pointer-events: none;
+    opacity: 0;
+}
+
+@keyframes likeParticle {
+    0% {
+        transform: translateY(0) scale(0);
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-30px) scale(1.5);
+        opacity: 0;
+    }
 }
 
 .edit-btn { 
@@ -628,7 +705,7 @@
 
 /* 投稿フォームエリア */
 .post-area { 
-    background-color: var(--bg-sidebar); margin: 20px 30px 0 30px; border-radius: var(--card-radius); 
+    background-color: var(--bg-sidebar); margin: 20px 30px 0; border-radius: var(--card-radius); 
     border: 1px solid var(--border-color); box-shadow: var(--shadow);
     overflow: hidden; flex-shrink: 0; transition: border-color 0.3s;
     max-height: calc(100vh - 150px);
@@ -679,8 +756,7 @@
     transition: max-height 0.3s ease-out, opacity 0.3s ease-out; 
     max-height: calc(100vh - 250px); 
     opacity: 1; 
-    overflow-y: auto; 
-    overflow-x: hidden;
+    overflow: hidden auto;
     flex: 1;
     min-height: 0;
 }
@@ -792,12 +868,12 @@ button {
     font-family: var(--font-body);
 }
 
-button:hover:not(:disabled):not(.posting) { 
+button:hover:not(:disabled, .posting) { 
     transform: translateY(-1px); 
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-button:active:not(:disabled):not(.posting) {
+button:active:not(:disabled, .posting) {
     transform: translateY(-1px) scale(1);
 }
 
@@ -1019,8 +1095,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
     flex-wrap: wrap; 
     margin-bottom: 15px; 
     max-height: 300px; 
-    overflow-y: auto; 
-    overflow-x: hidden; 
+    overflow: hidden auto; 
     padding: 10px; 
     background: var(--input-bg); 
     border-radius: 8px; 
@@ -1197,10 +1272,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 
 .route-image-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
     display: flex;
     align-items: flex-end;
@@ -1220,7 +1292,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 }
 
 .route-overlay-title {
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
     font-size: 1.5em;
     font-weight: bold;
     color: #fff;
@@ -1228,14 +1300,14 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 }
 
 .route-overlay-subtitle {
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
     font-size: 1em;
     color: rgba(255,255,255,0.9);
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .route-overlay-preview {
-    margin: 0 0 12px 0;
+    margin: 0 0 12px;
     font-size: 0.9em;
     color: rgba(255,255,255,0.85);
     line-height: 1.5;
@@ -1387,9 +1459,8 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 .card-scroll-container {
     display: flex;
     gap: 20px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 10px 5px 20px 5px;
+    overflow: auto hidden;
+    padding: 10px 5px 20px;
     scroll-snap-type: x proximity;
     scrollbar-width: thin;
     scrollbar-color: var(--purple) var(--current-line);
@@ -1436,10 +1507,29 @@ input[type="radio"], input[type="checkbox"] { display: none; }
     border-radius: var(--card-radius);
     padding: 20px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     scroll-snap-align: start;
     flex-shrink: 0;
     user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.compact-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(111, 212, 241, 0.1) 0%, rgba(189, 147, 249, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.compact-card:hover::before {
+    opacity: 1;
 }
 
 .card-scroll-container:not(.dragging) .compact-card {
@@ -1447,9 +1537,15 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 }
 
 .compact-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(189, 147, 249, 0.3);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 12px 30px rgba(189, 147, 249, 0.4),
+        0 0 0 2px var(--purple);
     border-color: var(--purple);
+}
+
+.compact-card:active {
+    transform: translateY(-4px) scale(1.01);
 }
 
 .compact-card-header {
@@ -1474,7 +1570,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 
 .compact-card-title {
     font-size: 1.3em;
-    margin: 0 0 12px 0;
+    margin: 0 0 12px;
     color: var(--pink);
     font-weight: 700;
     line-height: 1.4;
@@ -1555,7 +1651,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 
 .section-content .card-title {
     font-size: 1.8em;
-    margin: 0 0 20px 0;
+    margin: 0 0 20px;
     padding-bottom: 15px;
     color: var(--pink);
 }
@@ -1583,5 +1679,109 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 .section-content .like-btn {
     font-size: 1em;
     padding: 10px 20px;
+}
+
+/* ============================================
+   ソート選択UI
+   ============================================ */
+
+.sort-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 8px;
+}
+
+.sort-selector select {
+    padding: 8px 12px;
+    background: var(--input-bg);
+    color: var(--fg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236fd4f1' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 30px;
+}
+
+.sort-selector select:hover {
+    border-color: var(--cyan);
+    background-color: var(--bg-hover);
+}
+
+.sort-selector select:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(111, 212, 241, 0.1);
+}
+
+.sort-selector select option {
+    background: var(--bg-sidebar);
+    color: var(--fg-primary);
+    padding: 8px;
+}
+
+/* ============================================
+   ブックマークボタン
+   ============================================ */
+
+.bookmark-btn {
+    background: transparent;
+    border: none;
+    color: var(--cyan);
+    cursor: pointer;
+    font-size: 1em;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.bookmark-btn:hover {
+    background: var(--bg-hover);
+    transform: translateY(-2px);
+}
+
+.bookmark-btn.bookmarked {
+    color: var(--yellow);
+    animation: bookmarkPulse 0.4s ease;
+}
+
+.bookmark-btn.bookmarked i {
+    color: var(--yellow);
+}
+
+@keyframes bookmarkPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+}
+
+/* ブックマークヘッダー */
+.bookmark-header {
+    animation: slideInDown 0.4s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 

@@ -6,7 +6,7 @@
  * HTMLエスケープ（XSS対策）
  */
 function escapeHtml(str) {
-    if (!str) return "";
+    if (!str) return '';
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
@@ -16,8 +16,8 @@ function escapeHtml(str) {
  * URLの安全なエスケープ
  */
 function escapeUrl(url) {
-    if (!url) return "";
-    return escapeHtml(url).replace(/'/g, "&#39;");
+    if (!url) return '';
+    return escapeHtml(url).replace(/'/g, '&#39;');
 }
 
 /**
@@ -90,7 +90,7 @@ function showToast(message, type = 'info', duration = CONFIG.TOAST_DURATION) {
  * Markdownパース（詳細版）
  */
 function parseMarkdown(text) {
-    if (!text) return "";
+    if (!text) return '';
     
     // コードブロックを一時的に置き換え
     const codeBlocks = [];
@@ -213,22 +213,22 @@ function parseMarkdown(text) {
  * リージョン名に応じたCSSクラス名を取得
  */
 function getRegionClass(region) {
-    if (!region) return "badge-default";
+    if (!region) return 'badge-default';
     
     const regionLower = region.toLowerCase();
     const regionMap = [
-        { keywords: ["層岩", "巨淵", "chasm"], class: "badge-chasm" },
-        { keywords: ["淵下宮", "enkanomiya"], class: "badge-enkanomiya" },
-        { keywords: ["鶴観", "tsurumi"], class: "badge-tsurumi" },
-        { keywords: ["沈玉", "chenyu", "谷"], class: "badge-chenyu" },
-        { keywords: ["モンド", "mondstadt"], class: "badge-mondstadt" },
-        { keywords: ["璃月", "liyue"], class: "badge-liyue" },
-        { keywords: ["稲妻", "inazuma"], class: "badge-inazuma" },
-        { keywords: ["スメール", "sumeru"], class: "badge-sumeru" },
-        { keywords: ["フォンテーヌ", "fontaine"], class: "badge-fontaine" },
-        { keywords: ["ナタ", "natlan"], class: "badge-natlan" },
-        { keywords: ["スネージナヤ", "snezhnaya"], class: "badge-snezhnaya" },
-        { keywords: ["ナド", "クライ", "nadoh", "kuraibōn"], class: "badge-nadoh" }
+        { keywords: ['層岩', '巨淵', 'chasm'], class: 'badge-chasm' },
+        { keywords: ['淵下宮', 'enkanomiya'], class: 'badge-enkanomiya' },
+        { keywords: ['鶴観', 'tsurumi'], class: 'badge-tsurumi' },
+        { keywords: ['沈玉', 'chenyu', '谷'], class: 'badge-chenyu' },
+        { keywords: ['モンド', 'mondstadt'], class: 'badge-mondstadt' },
+        { keywords: ['璃月', 'liyue'], class: 'badge-liyue' },
+        { keywords: ['稲妻', 'inazuma'], class: 'badge-inazuma' },
+        { keywords: ['スメール', 'sumeru'], class: 'badge-sumeru' },
+        { keywords: ['フォンテーヌ', 'fontaine'], class: 'badge-fontaine' },
+        { keywords: ['ナタ', 'natlan'], class: 'badge-natlan' },
+        { keywords: ['スネージナヤ', 'snezhnaya'], class: 'badge-snezhnaya' },
+        { keywords: ['ナド', 'クライ', 'nadoh', 'kuraibōn'], class: 'badge-nadoh' }
     ];
     
     for (const { keywords, class: className } of regionMap) {
@@ -237,6 +237,6 @@ function getRegionClass(region) {
         }
     }
     
-    return "badge-default";
+    return 'badge-default';
 }
 

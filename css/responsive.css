@@ -7,9 +7,8 @@
     body { 
         flex-direction: column; 
         height: auto; 
-        overflow-y: auto; 
-        -webkit-overflow-scrolling: touch; 
-        overflow-x: hidden;
+        overflow: hidden auto; 
+        -webkit-overflow-scrolling: touch;
     }
     
     /* bodyがメニューで覆われている間のスクロールを禁止 */
@@ -185,6 +184,7 @@
     .mobile-menu-btn {
         display: none !important;
     }
+
     /* PCではサイドバー内の閉じるボタンも隠す */
     .mobile-close-btn {
         display: none !important;

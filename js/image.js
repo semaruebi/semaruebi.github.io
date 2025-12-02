@@ -104,7 +104,7 @@ function updateImagePreview() {
     const preview = document.getElementById('image-preview');
     if (!preview) return;
     
-    preview.innerHTML = "";
+    preview.innerHTML = '';
     
     // 既存の画像URLを表示（編集モード用）
     existingImageUrls.forEach((url, index) => {

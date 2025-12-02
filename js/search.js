@@ -4,22 +4,22 @@
 
 // グローバル変数
 let availableTags = new Set();
-let searchType = "content"; // "tag" | "content" | "both"
+let searchType = 'content'; // "tag" | "content" | "both"
 
 const debouncedSearch = debounce(() => {
     filterBySearch();
 }, CONFIG.SEARCH_DEBOUNCE);
 
 function handleSearchInput() {
-    const inputVal = document.getElementById("search-input")?.value || "";
+    const inputVal = document.getElementById('search-input')?.value || '';
     debouncedSearch();
     showSuggestions(inputVal);
     updateSearchTypeSelector();
 }
 
 function updateSearchTypeSelector() {
-    const inputVal = document.getElementById("search-input")?.value.trim() || "";
-    const selector = document.getElementById("search-type-selector");
+    const inputVal = document.getElementById('search-input')?.value.trim() || '';
+    const selector = document.getElementById('search-type-selector');
     if (!selector) return;
     
     // タグが選択されているかどうかを判定
@@ -27,10 +27,10 @@ function updateSearchTypeSelector() {
     
     if (isTagSelected || !inputVal) {
         // タグが選択されている場合、または入力がない場合は非表示
-        selector.style.display = "none";
+        selector.style.display = 'none';
     } else {
         // 自由入力の場合は表示
-        selector.style.display = "flex";
+        selector.style.display = 'flex';
     }
 }
 
@@ -42,11 +42,11 @@ function updateSearchType() {
     }
 }
 
-function showSuggestions(filterText = "") {
+function showSuggestions(filterText = '') {
     const suggestionBox = document.getElementById('search-suggestions');
     if (!suggestionBox) return;
     
-    suggestionBox.innerHTML = "";
+    suggestionBox.innerHTML = '';
     
     const filteredTags = Array.from(availableTags).filter(tag => 
         tag.toLowerCase().includes(filterText.toLowerCase())
@@ -65,10 +65,10 @@ function showSuggestions(filterText = "") {
         div.innerHTML = `<i class="fas fa-tag suggestion-tag-icon" aria-hidden="true"></i> ${escapeHtml(tag)}`;
         
         div.onclick = () => {
-            const input = document.getElementById("search-input");
+            const input = document.getElementById('search-input');
             if (input) {
                 input.value = tag;
-                searchType = "tag"; // タグ検索モードに切り替え
+                searchType = 'tag'; // タグ検索モードに切り替え
                 updateSearchTypeSelector();
                 filterBySearch();
                 suggestionBox.classList.remove('show');
@@ -90,16 +90,16 @@ function showSuggestions(filterText = "") {
 }
 
 function filterBySearch() {
-    const keyword = document.getElementById("search-input")?.value.trim() || "";
+    const keyword = document.getElementById('search-input')?.value.trim() || '';
     const keywordLower = keyword.toLowerCase();
-    const titleEl = document.getElementById("current-view-title");
+    const titleEl = document.getElementById('current-view-title');
     
     if (!keyword) {
         renderHome();
         return;
     }
     
-    const container = document.getElementById("main-container");
+    const container = document.getElementById('main-container');
     if (!container) return;
     
     // タグの部分一致チェック用のヘルパー関数
@@ -133,7 +133,7 @@ function filterBySearch() {
             </div>
         `;
     } else {
-        let html = "";
+        let html = '';
         filtered.forEach(p => html += createCardHtml(p, true));
         container.innerHTML = html;
         
@@ -161,10 +161,10 @@ function collectAllTags() {
 }
 
 function searchByTag(tag) {
-    const input = document.getElementById("search-input");
+    const input = document.getElementById('search-input');
     if (input) {
         input.value = tag;
-        searchType = "tag";
+        searchType = 'tag';
         filterBySearch();
     }
 }

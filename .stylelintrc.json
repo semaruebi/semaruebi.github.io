@@ -8,7 +8,11 @@
     "property-no-vendor-prefix": null,
     "value-no-vendor-prefix": null,
     "selector-no-vendor-prefix": null,
-    "media-feature-range-notation": "prefix"
+    "media-feature-range-notation": "prefix",
+    "keyframes-name-pattern": null,
+    "no-descending-specificity": null,
+    "declaration-block-single-line-max-declarations": null,
+    "no-duplicate-selectors": [true, {"severity": "warning"}]
   }
 }
 

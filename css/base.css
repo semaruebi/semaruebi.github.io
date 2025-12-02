@@ -70,8 +70,7 @@ main {
 /* コンテンツ一覧 */
 .content-scroll { 
     flex: 1; 
-    overflow-y: auto; 
-    overflow-x: hidden;
+    overflow: hidden auto;
     padding: 30px; 
 }
 
@@ -142,13 +141,14 @@ footer p { margin: 3px 0; }
 /* トースト通知システム */
 .toast-container {
     position: fixed;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
     z-index: 3000;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: 10px;
     pointer-events: none;
+    max-width: 400px;
 }
 
 .toast {
@@ -159,12 +159,12 @@ footer p { margin: 3px 0; }
     background: var(--bg-sidebar);
     border: 1px solid var(--border-color);
     border-radius: var(--card-radius);
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     min-width: 280px;
     max-width: 400px;
     opacity: 0;
-    transform: translateX(100%);
-    transition: all 0.3s ease;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: auto;
     font-size: 0.95em;
     color: var(--fg-primary);
@@ -172,7 +172,7 @@ footer p { margin: 3px 0; }
 
 .toast.show {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
 }
 
 .toast i {

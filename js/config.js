@@ -1,7 +1,7 @@
 // 設定ファイル
 // GAS API URLをここに設定してください
 const CONFIG = {
-    GAS_API_URL: "https://script.google.com/macros/s/AKfycbxsZcPaU9gcpqjbAT2XR1A3UX306uIAQHA_NEhZpn5UQMlztTOqIgHUEgkzXj6myLeMng/exec",
+    GAS_API_URL: 'https://script.google.com/macros/s/AKfycbxsZcPaU9gcpqjbAT2XR1A3UX306uIAQHA_NEhZpn5UQMlztTOqIgHUEgkzXj6myLeMng/exec',
     
     // リトライ設定
     MAX_RETRIES: 3,
