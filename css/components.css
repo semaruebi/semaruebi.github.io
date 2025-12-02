@@ -953,7 +953,7 @@ button.posting {
 
 .tag-label { font-size: 0.9em; color: var(--cyan); font-weight: bold; margin-bottom: 10px; display: block; letter-spacing: 0.5px; }
 
-.tag-options { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
+.tag-options { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 15px; row-gap: 12px; }
 
 .tag-radio-label { 
     cursor: pointer; padding: 8px 16px; border-radius: 20px; 

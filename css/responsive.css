@@ -595,6 +595,17 @@
         min-height: 120px;
     }
     
+    /* オプションタグの間隔を広げる */
+    .tag-options {
+        gap: 10px;
+        row-gap: 14px;
+    }
+    
+    .tag-radio-label {
+        padding: 8px 14px;
+        font-size: 0.85em;
+    }
+    
     /* 選択された精鋭タグ */
     .selected-elite-tag {
         padding: 6px 10px;
@@ -727,6 +738,17 @@
         padding: 8px 12px !important;
         font-size: 0.85em !important;
         height: 36px !important;
+    }
+    
+    /* オプションタグをさらに見やすく */
+    .tag-options {
+        gap: 8px;
+        row-gap: 12px;
+    }
+    
+    .tag-radio-label {
+        padding: 7px 12px;
+        font-size: 0.8em;
     }
 }
 
