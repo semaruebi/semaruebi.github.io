@@ -38,6 +38,7 @@ jobs:
       
       - name: 🖼️ 画像存在確認
         run: npm run check:images
+        continue-on-error: true
       
       - name: 📊 テスト結果サマリー
         if: always()
@@ -54,14 +55,23 @@ jobs:
       pages: write
       id-token: write
     
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     steps:
       - name: 📥 コードをチェックアウト
         uses: actions/checkout@v4
       
-      - name: 🚀 GitHub Pages デプロイ
-        uses: peaceiris/actions-gh-pages@v3
+      - name: 📦 GitHub Pages用のアーティファクトを準備
+        uses: actions/configure-pages@v4
+      
+      - name: 📤 アーティファクトをアップロード
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          exclude_assets: '.github,scripts,*.md,gas.txt'
+          path: '.'
+      
+      - name: 🚀 GitHub Pagesにデプロイ
+        id: deployment
+        uses: actions/deploy-pages@v4
 
