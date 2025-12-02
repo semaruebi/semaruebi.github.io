@@ -20,6 +20,7 @@ async function fetchData(btnElement = null, forceRefresh = false) {
         btnElement.innerHTML = '<i class="fas fa-sync-alt fa-spin" aria-hidden="true"></i>';
         btnElement.setAttribute('aria-label', '更新中...');
     } else if (!allData.posts.length) {
+        // 初回読み込み時はシグウィンのローディングを表示
         container.innerHTML = `
             <div class="loading" role="status" aria-live="polite" style="text-align: center; padding: 40px;">
                 <img src="assets/images/sigewinne/ochusha.webp" alt="治療中のシグウィン" style="width: 120px; height: 120px; object-fit: contain; margin: 0 auto 20px; display: block; animation: bounce 1s infinite;">

@@ -87,14 +87,14 @@
 [data-theme="light"] .compact-card.card-with-bg-image::before,
 [data-theme="sigewinne"] .card-with-bg-image::before,
 [data-theme="sigewinne"] .compact-card.card-with-bg-image::before {
-    opacity: 0.15;
+    opacity: 0.95;
 }
 
 [data-theme="light"] .card-with-bg-image:hover::before,
 [data-theme="light"] .compact-card.card-with-bg-image:hover::before,
 [data-theme="sigewinne"] .card-with-bg-image:hover::before,
 [data-theme="sigewinne"] .compact-card.card-with-bg-image:hover::before {
-    opacity: 0.25;
+    opacity: 0.95;
 }
 
 @keyframes cardFadeIn {
@@ -1025,6 +1025,272 @@ button {
 [data-theme="light"] #submit-post-btn,
 [data-theme="sigewinne"] #submit-post-btn {
     color: #fff !important;
+}
+
+/* ============================================
+   投稿中モーダル
+   ============================================ */
+
+.posting-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.posting-modal-overlay.show {
+    opacity: 1;
+}
+
+.posting-modal {
+    background: var(--bg-sidebar);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    border: 2px solid var(--border-color);
+    animation: posting-modal-bounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes posting-modal-bounce {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.posting-modal-img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin: -20 auto 20px;
+    animation: posting-float 2s ease-in-out infinite;
+}
+
+@keyframes posting-float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.posting-modal-content {
+    position: relative;
+}
+
+.posting-spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    border: 4px solid rgba(139, 233, 253, 0.2);
+    border-top-color: var(--cyan);
+    border-radius: 50%;
+    animation: posting-spin 1s linear infinite;
+}
+
+@keyframes posting-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.posting-modal-text {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--fg-primary);
+    margin: 0 0 10px 0;
+}
+
+.posting-modal-subtext {
+    font-size: 1em;
+    color: var(--comment);
+    margin: 0;
+}
+
+/* ============================================
+   スケルトンローディング
+   ============================================ */
+
+.skeleton-card {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--cyan);
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-element {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: 4px;
+}
+
+[data-theme="light"] .skeleton-element,
+[data-theme="sigewinne"] .skeleton-element {
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.03) 0%,
+        rgba(0, 0, 0, 0.08) 50%,
+        rgba(0, 0, 0, 0.03) 100%
+    );
+    background-size: 200% 100%;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton-title {
+    height: 24px;
+    width: 70%;
+    margin-bottom: 15px;
+}
+
+.skeleton-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.skeleton-tag {
+    height: 24px;
+    width: 60px;
+    border-radius: 12px;
+}
+
+.skeleton-content {
+    height: 16px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.skeleton-content:last-of-type {
+    width: 80%;
+}
+
+.skeleton-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.skeleton-action {
+    height: 20px;
+    width: 50px;
+}
+
+.skeleton-compact-card {
+    min-width: 320px;
+    max-width: 320px;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    padding: 20px;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-compact-title {
+    height: 20px;
+    width: 80%;
+    margin-bottom: 12px;
+}
+
+.skeleton-compact-preview {
+    height: 14px;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.skeleton-compact-preview:last-of-type {
+    width: 60%;
+}
+
+/* ============================================
+   カードアニメーション
+   ============================================ */
+
+/* スクロールフェードイン */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* カード展開アニメーション */
+@keyframes card-expand {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ホバー時のカードアニメーション強化 */
+.card:hover,
+.compact-card:hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* カードクリック時のリップルエフェクト */
+.card-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(139, 233, 253, 0.3);
+    transform: scale(0);
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
 }
 
 button:hover:not(:disabled, .posting) { 

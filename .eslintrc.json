@@ -140,7 +140,15 @@
     "toggleRegion": "readonly",
     "toggleHomeSection": "readonly",
     "toggleAboutModal": "readonly",
-    "closeContactForm": "readonly"
+    "closeContactForm": "readonly",
+    "showSkeletonCards": "readonly",
+    "createSkeletonCardHtml": "readonly",
+    "createSkeletonCompactCardHtml": "readonly",
+    "initScrollAnimations": "readonly",
+    "observeNewCards": "readonly",
+    "animateCardExpand": "readonly",
+    "showPostingModal": "readonly",
+    "hidePostingModal": "readonly"
   },
   "rules": {
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],

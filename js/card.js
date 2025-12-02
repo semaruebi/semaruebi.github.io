@@ -414,6 +414,65 @@ function handleLikeToggle(id, btn, likedArray, storageKey, actionPrefix) {
     }
 }
 
+// ============================================
+// スケルトンローディング
+// ============================================
+
+/**
+ * スケルトンカードHTML生成
+ */
+function createSkeletonCardHtml() {
+    return `
+        <article class="skeleton-card">
+            <div class="skeleton-element skeleton-title"></div>
+            <div class="skeleton-tags">
+                <div class="skeleton-element skeleton-tag"></div>
+                <div class="skeleton-element skeleton-tag"></div>
+                <div class="skeleton-element skeleton-tag"></div>
+            </div>
+            <div class="skeleton-element skeleton-content"></div>
+            <div class="skeleton-element skeleton-content"></div>
+            <div class="skeleton-element skeleton-content"></div>
+            <div class="skeleton-actions">
+                <div class="skeleton-element skeleton-action"></div>
+                <div class="skeleton-element skeleton-action"></div>
+            </div>
+        </article>
+    `;
+}
+
+/**
+ * コンパクトスケルトンカードHTML生成
+ */
+function createSkeletonCompactCardHtml() {
+    return `
+        <article class="skeleton-compact-card">
+            <div class="skeleton-element skeleton-compact-title"></div>
+            <div class="skeleton-tags">
+                <div class="skeleton-element skeleton-tag"></div>
+                <div class="skeleton-element skeleton-tag"></div>
+            </div>
+            <div class="skeleton-element skeleton-compact-preview"></div>
+            <div class="skeleton-element skeleton-compact-preview"></div>
+            <div class="skeleton-element skeleton-compact-preview"></div>
+        </article>
+    `;
+}
+
+/**
+ * スケルトンカードを表示
+ */
+function showSkeletonCards(count = 5, isCompact = false) {
+    const container = document.getElementById('posts-container');
+    if (!container) return;
+    
+    const skeletonHtml = isCompact 
+        ? createSkeletonCompactCardHtml() 
+        : createSkeletonCardHtml();
+    
+    container.innerHTML = skeletonHtml.repeat(count);
+}
+
 function toggleCommentLike(commentId, btn) {
     handleLikeToggle(commentId, btn, myLikedComments, 'rta_liked_comments', 'Comment');
 }

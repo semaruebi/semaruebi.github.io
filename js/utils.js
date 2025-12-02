@@ -240,3 +240,47 @@ function getRegionClass(region) {
     return 'badge-default';
 }
 
+// ============================================
+// 投稿中モーダル
+// ============================================
+
+/**
+ * 投稿中モーダルを表示
+ */
+function showPostingModal(message = '処理中…') {
+    // 既存のモーダルがあれば削除
+    hidePostingModal();
+    
+    const overlay = document.createElement('div');
+    overlay.id = 'posting-modal-overlay';
+    overlay.className = 'posting-modal-overlay';
+    overlay.innerHTML = `
+        <div class="posting-modal">
+            <img src="assets/images/sigewinne/ochusha.webp" alt="処理中のシグウィン" class="posting-modal-img">
+            <div class="posting-modal-content">
+                <div class="posting-spinner"></div>
+                <p class="posting-modal-text">${escapeHtml(message)}</p>
+                <p class="posting-modal-subtext">じっとしててね💉</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    // フェードイン
+    setTimeout(() => {
+        overlay.classList.add('show');
+    }, 10);
+}
+
+/**
+ * 投稿中モーダルを非表示
+ */
+function hidePostingModal() {
+    const overlay = document.getElementById('posting-modal-overlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+        setTimeout(() => overlay.remove(), 300);
+    }
+}
+

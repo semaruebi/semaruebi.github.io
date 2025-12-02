@@ -98,6 +98,9 @@ async function postData() {
     btn.setAttribute('aria-label', '投稿処理中です。しばらくお待ちください...');
     btn.classList.add('posting');
     
+    // 投稿中モーダルを表示
+    showPostingModal('投稿中…');
+    
     try {
         const images = [];
         if (selectedImageFiles.length > 0) {
@@ -164,6 +167,9 @@ async function postData() {
         btn.innerHTML = originalText;
         btn.setAttribute('aria-label', '投稿する');
         btn.classList.remove('posting');
+        
+        // 投稿中モーダルを閉じる
+        hidePostingModal();
     }
 }
 
@@ -172,6 +178,9 @@ async function deletePost(id) {
     if (!password) return;
     
     if (!confirm('本当に削除するの？もう、治らないみたい…になっちゃうわよ？')) return;
+    
+    // 削除中モーダルを表示
+    showPostingModal('削除中…');
     
     try {
         await fetchWithRetry(CONFIG.GAS_API_URL, {
@@ -182,9 +191,13 @@ async function deletePost(id) {
         });
         
         showToast('削除リクエストを送ったわ。あわあわ～しないで待っててね。', 'success');
-        setTimeout(() => fetchData(null, true), 1500);
+        setTimeout(() => {
+            fetchData(null, true);
+            hidePostingModal();
+        }, 1500);
     } catch (err) {
         showToast('パスワードが違うみたい。もしかしてワルい子？', 'error');
+        hidePostingModal();
     }
 }
 
@@ -376,6 +389,9 @@ async function updatePost(id, password) {
     btn.setAttribute('aria-label', '更新処理中です。しばらくお待ちください...');
     btn.classList.add('posting');
     
+    // 更新中モーダルを表示
+    showPostingModal('更新中…');
+    
     try {
         const images = [];
         if (selectedImageFiles.length > 0) {
@@ -459,6 +475,9 @@ async function updatePost(id, password) {
         btn.innerHTML = originalText;
         btn.setAttribute('aria-label', '投稿する');
         btn.classList.remove('posting');
+        
+        // 更新中モーダルを閉じる
+        hidePostingModal();
     }
 }
 
