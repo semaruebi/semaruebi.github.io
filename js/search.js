@@ -4,89 +4,191 @@
 
 // グローバル変数
 let availableTags = new Set();
-let searchType = 'content'; // "tag" | "content" | "both"
+let eliteTags = new Set(); // 精鋭タグ
+let searchHistory = JSON.parse(localStorage.getItem('search_history') || '[]'); // 検索履歴
+const MAX_HISTORY = 10; // 最大履歴数
 
-const debouncedSearch = debounce(() => {
-    filterBySearch();
-}, CONFIG.SEARCH_DEBOUNCE);
-
-function handleSearchInput() {
-    const inputVal = document.getElementById('search-input')?.value || '';
-    debouncedSearch();
-    showSuggestions(inputVal);
-    updateSearchTypeSelector();
-}
-
-function updateSearchTypeSelector() {
-    const inputVal = document.getElementById('search-input')?.value.trim() || '';
-    const selector = document.getElementById('search-type-selector');
-    if (!selector) return;
-    
-    // タグが選択されているかどうかを判定
-    const isTagSelected = inputVal && Array.from(availableTags).some(tag => tag.toLowerCase() === inputVal.toLowerCase());
-    
-    if (isTagSelected || !inputVal) {
-        // タグが選択されている場合、または入力がない場合は非表示
-        selector.style.display = 'none';
-    } else {
-        // 自由入力の場合は表示
-        selector.style.display = 'flex';
+/**
+ * Enter キーで検索実行
+ */
+function handleSearchKeydown(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        executeSearch();
     }
 }
 
-function updateSearchType() {
-    const selected = document.querySelector('input[name="search-type"]:checked');
-    if (selected) {
-        searchType = selected.value;
+/**
+ * 検索を実行
+ */
+function executeSearch() {
+    const keyword = document.getElementById('search-input')?.value.trim() || '';
+    if (keyword) {
         filterBySearch();
     }
 }
 
-function showSuggestions(filterText = '') {
-    const suggestionBox = document.getElementById('search-suggestions');
-    if (!suggestionBox) return;
+/**
+ * 検索履歴を非表示にする
+ */
+function hideSearchHistory() {
+    const historyBox = document.getElementById('search-history');
+    if (historyBox) {
+        historyBox.classList.remove('show');
+    }
+}
+
+/**
+ * 検索履歴を表示
+ */
+function showSearchHistory() {
+    const historyBox = document.getElementById('search-history');
+    if (!historyBox) return;
     
-    suggestionBox.innerHTML = '';
+    historyBox.innerHTML = '';
     
-    const filteredTags = Array.from(availableTags).filter(tag => 
-        tag.toLowerCase().includes(filterText.toLowerCase())
-    ).sort();
-    
-    if (filteredTags.length === 0) {
-        suggestionBox.classList.remove('show');
+    if (searchHistory.length === 0) {
+        historyBox.innerHTML = '<div class="empty-history">まだ検索履歴がないのよ💉</div>';
+        historyBox.classList.add('show');
         return;
     }
     
-    filteredTags.forEach(tag => {
+    // ヘッダー
+    const header = document.createElement('div');
+    header.className = 'history-header';
+    header.innerHTML = `
+        <h4><i class="fas fa-history"></i> 検索履歴</h4>
+        <button class="clear-history-btn" onclick="clearSearchHistory(); event.stopPropagation();" title="全て削除">
+            <i class="fas fa-trash"></i> クリア
+        </button>
+    `;
+    historyBox.appendChild(header);
+    
+    // 履歴項目
+    searchHistory.forEach(keyword => {
         const div = document.createElement('div');
-        div.className = 'suggestion-item';
-        div.setAttribute('role', 'option');
-        div.setAttribute('tabindex', '0');
-        div.innerHTML = `<i class="fas fa-tag suggestion-tag-icon" aria-hidden="true"></i> ${escapeHtml(tag)}`;
+        div.className = 'history-item';
+        div.innerHTML = `<i class="fas fa-clock"></i> ${escapeHtml(keyword)}`;
         
         div.onclick = () => {
             const input = document.getElementById('search-input');
             if (input) {
-                input.value = tag;
-                searchType = 'tag'; // タグ検索モードに切り替え
-                updateSearchTypeSelector();
+                input.value = keyword;
                 filterBySearch();
-                suggestionBox.classList.remove('show');
+                historyBox.classList.remove('show');
             }
         };
         
-        div.onkeydown = (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                div.onclick();
-            }
-        };
-        
-        suggestionBox.appendChild(div);
+        historyBox.appendChild(div);
     });
     
-    suggestionBox.classList.add('show');
-    suggestionBox.setAttribute('role', 'listbox');
+    historyBox.classList.add('show');
+}
+
+/**
+ * タグ検索モーダルを開く
+ */
+function openTagSearchModal() {
+    const modal = document.getElementById('tag-search-modal');
+    const list = document.getElementById('tag-search-list');
+    
+    if (!modal || !list) return;
+    
+    // 通常タグと精鋭タグを分離
+    const normalTags = Array.from(availableTags).filter(tag => !eliteTags.has(tag)).sort();
+    const eliteTagsArray = Array.from(eliteTags).sort();
+    
+    let html = '';
+    
+    // 精鋭タグカテゴリ
+    if (eliteTagsArray.length > 0) {
+        html += `
+            <div class="tag-category">
+                <h4 class="tag-category-title"><i class="fas fa-dragon"></i> 精鋭</h4>
+                <div class="tag-list">
+        `;
+        eliteTagsArray.forEach(tag => {
+            const imageUrl = typeof getEliteEnemyImagePath === 'function' ? getEliteEnemyImagePath(tag) : null;
+            const tagJs = escapeHtml(tag).replace(/'/g, "\\'");
+            
+            if (imageUrl) {
+                html += `<div class="tag-item elite-tag elite-tag-with-image" onclick="searchByTagFromModal('${tagJs}')"><img src="${imageUrl}" alt="${escapeHtml(tag)}" class="elite-tag-icon-img" loading="lazy"> ${escapeHtml(tag)}</div>`;
+            } else {
+                html += `<div class="tag-item elite-tag" onclick="searchByTagFromModal('${tagJs}')"><i class="fas fa-dragon"></i> ${escapeHtml(tag)}</div>`;
+            }
+        });
+        html += `</div></div>`;
+    }
+    
+    // 通常タグカテゴリ
+    if (normalTags.length > 0) {
+        html += `
+            <div class="tag-category">
+                <h4 class="tag-category-title"><i class="fas fa-tags"></i> タグ</h4>
+                <div class="tag-list">
+        `;
+        normalTags.forEach(tag => {
+            html += `<div class="tag-item" onclick="searchByTagFromModal('${escapeHtml(tag).replace(/'/g, "\\'")}')"><i class="fas fa-tag"></i> ${escapeHtml(tag)}</div>`;
+        });
+        html += `</div></div>`;
+    }
+    
+    if (html === '') {
+        html = '<p style="text-align:center; padding:40px; color:var(--comment);">まだタグがないのよ💉</p>';
+    }
+    
+    list.innerHTML = html;
+    openModal('tag-search-modal');
+}
+
+/**
+ * タグ検索モーダルを閉じる
+ */
+function closeTagSearchModal() {
+    closeModal('tag-search-modal');
+}
+
+/**
+ * モーダルからタグで検索
+ */
+function searchByTagFromModal(tag) {
+    const input = document.getElementById('search-input');
+    if (input) {
+        input.value = tag;
+        filterBySearch();
+        closeTagSearchModal();
+    }
+}
+
+/**
+ * 検索履歴をクリア
+ */
+function clearSearchHistory() {
+    searchHistory = [];
+    localStorage.setItem('search_history', JSON.stringify(searchHistory));
+    showSearchHistory();
+    showToast('検索履歴をクリアしたわよ💉', 'info');
+}
+
+/**
+ * 検索履歴に追加
+ */
+function addToSearchHistory(keyword) {
+    if (!keyword || keyword.trim() === '') return;
+    
+    // 既存の同じキーワードを削除
+    searchHistory = searchHistory.filter(k => k !== keyword);
+    
+    // 先頭に追加
+    searchHistory.unshift(keyword);
+    
+    // 最大数を超えたら古いものを削除
+    if (searchHistory.length > MAX_HISTORY) {
+        searchHistory = searchHistory.slice(0, MAX_HISTORY);
+    }
+    
+    // localStorage に保存
+    localStorage.setItem('search_history', JSON.stringify(searchHistory));
 }
 
 function filterBySearch() {
@@ -98,6 +200,9 @@ function filterBySearch() {
         renderHome();
         return;
     }
+    
+    // 検索履歴に追加
+    addToSearchHistory(keyword);
     
     const container = document.getElementById('main-container');
     if (!container) return;
@@ -141,19 +246,42 @@ function filterBySearch() {
         initTwitterWidgets();
     }
     
-    const suggestions = document.getElementById('search-suggestions');
-    if (suggestions) suggestions.classList.remove('show');
+    // 検索履歴を閉じる
+    const history = document.getElementById('search-history');
+    if (history) history.classList.remove('show');
 }
 
 function collectAllTags() {
     availableTags.clear();
+    eliteTags.clear();
+    
     if (allData.posts) {
         allData.posts.forEach(post => {
             if (post.tags) {
                 const tags = post.tags.split(',');
                 tags.forEach(t => {
                     const trimmed = t.trim();
-                    if (trimmed) availableTags.add(trimmed);
+                    if (trimmed) {
+                        availableTags.add(trimmed);
+                        
+                        // 精鋭タグかどうかを判定（画像があれば精鋭タグ）
+                        if (typeof getEliteEnemyImagePath === 'function' && getEliteEnemyImagePath(trimmed)) {
+                            eliteTags.add(trimmed);
+                        } else if (typeof availableEliteImages !== 'undefined') {
+                            // フォールバック
+                            const tagLower = trimmed.toLowerCase();
+                            const matchedImage = availableEliteImages.find(imageFileName => {
+                                const fileNameWithoutExt = imageFileName
+                                    .replace(/^アイコン_/, '')
+                                    .replace(/\.(jpg|jpeg|png|webp)$/i, '')
+                                    .toLowerCase();
+                                return fileNameWithoutExt.includes(tagLower) || tagLower.includes(fileNameWithoutExt);
+                            });
+                            if (matchedImage) {
+                                eliteTags.add(trimmed);
+                            }
+                        }
+                    }
                 });
             }
         });
@@ -167,5 +295,34 @@ function searchByTag(tag) {
         searchType = 'tag';
         filterBySearch();
     }
+}
+
+/**
+ * ドキュメント全体のクリックイベントで検索履歴を閉じる
+ */
+function initSearchHistoryCloseHandler() {
+    document.addEventListener('click', (event) => {
+        const searchHistory = document.getElementById('search-history');
+        const searchInput = document.getElementById('search-input');
+        
+        // 検索履歴が表示されていない場合は何もしない
+        if (!searchHistory || !searchHistory.classList.contains('show')) {
+            return;
+        }
+        
+        // 検索入力をクリックした場合は何もしない
+        if (searchInput && searchInput === event.target) {
+            return;
+        }
+        
+        // 検索履歴内をクリックした場合は何もしない
+        if (searchHistory.contains(event.target)) {
+            return;
+        }
+        
+        // それ以外の場所をクリックしたら検索履歴を閉じる
+        console.log('検索履歴を閉じるわよ！');
+        hideSearchHistory();
+    });
 }
 

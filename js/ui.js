@@ -216,9 +216,6 @@ function renderSidebar() {
     const isStatsActive = currentFilter.region === 'stats';
     
     let html = `
-        <div class="nav-item home ${!currentFilter.region ? 'active' : ''}" onclick="showHome()" role="button" tabindex="0" aria-label="ホーム">
-            <i class="fas fa-home" aria-hidden="true"></i> ホーム
-        </div>
         <div class="nav-item ${isStatsActive ? 'active' : ''}" onclick="renderStats()" role="button" tabindex="0" aria-label="統計情報">
             <span><i class="fas fa-chart-line" aria-hidden="true"></i> 統計情報</span>
         </div>
@@ -317,7 +314,6 @@ function renderHome() {
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
         searchInput.value = '';
-        updateSearchTypeSelector();
     }
     
     const container = document.getElementById('main-container');
@@ -411,6 +407,7 @@ function showHome() {
 
 function toggleMobileSidebar() {
     const sidebar = document.getElementById('mobile-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
     const body = document.body;
     const menuIcon = document.querySelector('.mobile-menu-btn i');
     if (!sidebar) return;
@@ -420,14 +417,43 @@ function toggleMobileSidebar() {
     body.classList.toggle('sidebar-open');
     sidebar.setAttribute('aria-hidden', isOpen);
     
+    // オーバーレイの表示/非表示
+    if (overlay) {
+        overlay.classList.toggle('show');
+    }
+    
     if (menuIcon) {
         menuIcon.className = isOpen ? 'fas fa-bars' : 'fas fa-times';
         menuIcon.setAttribute('aria-label', isOpen ? 'メニューを開く' : 'メニューを閉じる');
     }
 }
 
+function closeSidebar() {
+    const sidebar = document.getElementById('mobile-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const body = document.body;
+    const menuIcon = document.querySelector('.mobile-menu-btn i');
+    
+    if (sidebar && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        body.classList.remove('sidebar-open');
+        sidebar.setAttribute('aria-hidden', 'true');
+        
+        // オーバーレイを非表示
+        if (overlay) {
+            overlay.classList.remove('show');
+        }
+        
+        if (menuIcon) {
+            menuIcon.className = 'fas fa-bars';
+            menuIcon.setAttribute('aria-label', 'メニューを開く');
+        }
+    }
+}
+
 function closeSidebarOnNavigation() {
     const sidebar = document.getElementById('mobile-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
     const body = document.body;
     const menuIcon = document.querySelector('.mobile-menu-btn i');
     
@@ -435,6 +461,12 @@ function closeSidebarOnNavigation() {
         sidebar.classList.remove('open');
         body.classList.remove('sidebar-open');
         sidebar.setAttribute('aria-hidden', 'true');
+        
+        // オーバーレイを非表示
+        if (overlay) {
+            overlay.classList.remove('show');
+        }
+        
         if (menuIcon) {
             menuIcon.className = 'fas fa-bars';
             menuIcon.setAttribute('aria-label', 'メニューを開く');

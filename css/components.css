@@ -609,28 +609,71 @@
     }
 }
 
-/* いいね時のパーティクルエフェクト */
+/* いいね時の泡エフェクト */
+.like-btn.liked::before,
 .like-btn.liked::after {
-    content: '❤️';
+    content: '';
     position: absolute;
-    font-size: 1.5em;
-    animation: likeParticle 0.8s ease-out;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), var(--pink));
+    border-radius: 50%;
     pointer-events: none;
     opacity: 0;
+    box-shadow: 
+        0 0 10px rgba(255, 121, 198, 0.5),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.3);
 }
 
-@keyframes likeParticle {
+.like-btn.liked::before {
+    animation: bubbleFloat1 1.2s ease-out;
+    left: 30%;
+}
+
+.like-btn.liked::after {
+    animation: bubbleFloat2 1.4s ease-out;
+    right: 30%;
+    animation-delay: 0.1s;
+}
+
+@keyframes bubbleFloat1 {
     0% {
-        transform: translateY(0) scale(0);
-        opacity: 1;
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
     }
-
+    
+    10% {
+        opacity: 0.8;
+    }
+    
     50% {
-        opacity: 1;
+        transform: translate(-15px, -40px) scale(1.2);
+        opacity: 0.6;
     }
-
+    
     100% {
-        transform: translateY(-30px) scale(1.5);
+        transform: translate(-25px, -80px) scale(0.5);
+        opacity: 0;
+    }
+}
+
+@keyframes bubbleFloat2 {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+    
+    10% {
+        opacity: 0.8;
+    }
+    
+    50% {
+        transform: translate(15px, -45px) scale(1.4);
+        opacity: 0.6;
+    }
+    
+    100% {
+        transform: translate(30px, -85px) scale(0.6);
         opacity: 0;
     }
 }
@@ -707,7 +750,8 @@
 .post-area { 
     background-color: var(--bg-sidebar); margin: 20px 30px 0; border-radius: var(--card-radius); 
     border: 1px solid var(--border-color); box-shadow: var(--shadow);
-    overflow: hidden; flex-shrink: 0; transition: border-color 0.3s;
+    overflow-x: visible; flex-shrink: 0; transition: border-color 0.3s;
+    overflow-y: hidden; flex-shrink: 0; transition: border-color 0.3s;
     max-height: calc(100vh - 150px);
     display: flex;
     flex-direction: column;
@@ -753,10 +797,14 @@
 
 .post-content-wrapper { 
     padding: 20px; 
+    padding-bottom: 60px;
+    padding-left: 40px;
+    padding-right: 40px;
     transition: max-height 0.3s ease-out, opacity 0.3s ease-out; 
     max-height: calc(100vh - 250px); 
     opacity: 1; 
-    overflow: hidden auto;
+    overflow-y: auto;
+    overflow-x: visible;
     flex: 1;
     min-height: 0;
 }
@@ -897,7 +945,11 @@ button.posting {
 }
 
 /* タグ選択 */
-.tag-section { margin-bottom: 20px; border-top: 1px dashed var(--border-color); padding-top: 15px; }
+.tag-section { 
+    margin-bottom: 20px; 
+    border-top: 1px dashed var(--border-color); 
+    padding-top: 15px;
+}
 
 .tag-label { font-size: 0.9em; color: var(--cyan); font-weight: bold; margin-bottom: 10px; display: block; letter-spacing: 0.5px; }
 
@@ -962,21 +1014,6 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 }
 
 /* 画像付きタグ */
-.selected-elite-tag-with-image {
-    position: relative;
-    padding: 4px;
-    gap: 4px;
-    background: transparent;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-.selected-elite-tag-with-image:hover {
-    border-color: var(--purple);
-    transform: translateY(-2px);
-}
-
 .selected-elite-icon {
     width: 32px;
     height: 32px;
@@ -993,36 +1030,65 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 /* 精鋭タグのツールチップ */
 .elite-tag-tooltip {
     position: absolute;
-    bottom: -32px;
+    top: calc(100% + 8px);
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.9);
     color: white;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.8em;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85em;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: 1000;
+    transition: all 0.2s ease;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .elite-tag-tooltip::before {
     content: '';
     position: absolute;
-    top: -4px;
+    top: -5px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-bottom: 4px solid rgba(0, 0, 0, 0.9);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid rgba(0, 0, 0, 0.9);
 }
 
 .selected-elite-tag-with-image:hover .elite-tag-tooltip {
     opacity: 1;
+}
+
+.selected-elite-tag-with-image {
+    overflow: visible !important;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    margin: 4px;
+}
+
+.selected-elite-tag-with-image:hover {
+    border-color: var(--purple);
+    transform: translateY(-2px);
+}
+
+/* 精鋭選択表示エリア */
+#selected-elite-enemies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 0;
+    overflow: visible;
 }
 
 .remove-elite-btn {

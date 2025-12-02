@@ -274,9 +274,9 @@ function generatePopularElitesHtml(elites) {
         
         let imageUrl = null;
         
-        // getEliteEnemyImageUrl関数を使う
-        if (typeof getEliteEnemyImageUrl === 'function') {
-            imageUrl = getEliteEnemyImageUrl(elite.name);
+        // getEliteEnemyImagePath関数を使う
+        if (typeof getEliteEnemyImagePath === 'function') {
+            imageUrl = getEliteEnemyImagePath(elite.name);
         }
         
         // 画像URLが見つからない場合、availableEliteImagesから直接探す

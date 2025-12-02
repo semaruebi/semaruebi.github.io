@@ -59,14 +59,8 @@ window.onload = function() {
     // データ取得
     fetchData();
     
-    // 検索サジェストの外側クリックで閉じる
-    document.addEventListener('click', function(e) {
-        const searchBox = document.querySelector('.search-box');
-        const suggestions = document.getElementById('search-suggestions');
-        if (suggestions && suggestions.classList.contains('show') && searchBox && !searchBox.contains(e.target)) {
-            suggestions.classList.remove('show');
-        }
-    });
+    // 検索履歴の外側クリックで閉じる
+    initSearchHistoryCloseHandler();
     
     // スワイプ検知
     const sidebar = document.getElementById('mobile-sidebar');

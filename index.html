@@ -19,6 +19,9 @@
     <!-- トースト通知コンテナ -->
     <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
     
+    <!-- サイドバーオーバーレイ（モバイル用） -->
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+    
     <aside id="mobile-sidebar" role="navigation" aria-label="メインナビゲーション" aria-hidden="true">
         <div class="sidebar-header" onclick="showHome()" style="padding: 20px; font-family: var(--font-display); cursor: pointer; display: flex; align-items: center; gap: 12px;">
             <img src="assets/images/sigewinne/nnn.webp" alt="シグウィン" style="width: 48px; height: 48px; object-fit: contain;">
@@ -30,42 +33,41 @@
 
     <main>
         <header role="banner">
+            <h2 id="current-view-title">400EENote</h2>
+            
             <div class="header-actions">
                 <button onclick="toggleMobileSidebar()" class="icon-btn mobile-menu-btn" title="メニューを開く/閉じる" aria-label="メニューを開く" aria-expanded="false" aria-controls="mobile-sidebar">
                     <i class="fas fa-bars" aria-hidden="true"></i>
                 </button>
-                <h2 id="current-view-title">400EENote</h2>
-            </div>
-            
-            <div class="search-box" role="search">
-                <i class="fas fa-search" aria-hidden="true"></i>
-                <input type="text" id="search-input" placeholder="何を探してるの？" onkeyup="handleSearchInput()" onfocus="showSuggestions()" autocomplete="off" aria-label="検索" aria-autocomplete="list" aria-controls="search-suggestions">
-                <div id="search-suggestions" class="search-suggestions" role="listbox" aria-label="検索候補"></div>
-                <div id="search-type-selector" class="search-type-selector" style="display: none;">
-                    <label class="search-type-option">
-                        <input type="radio" name="search-type" value="content" checked onchange="updateSearchType()">
-                        <span>本文検索</span>
-                    </label>
-                    <label class="search-type-option">
-                        <input type="radio" name="search-type" value="tag" onchange="updateSearchType()">
-                        <span>タグ検索</span>
-                    </label>
+                
+                <div class="search-box" role="search">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <input type="text" id="search-input" placeholder="何を探してるの？" onkeydown="handleSearchKeydown(event)" onfocus="showSearchHistory()" autocomplete="off" aria-label="検索">
+                    <div id="search-history" class="search-history" role="listbox" aria-label="検索履歴"></div>
                 </div>
-            </div>
-            
-            <div class="sort-selector">
-                <select id="sort-select" onchange="changeSortType(this.value)" aria-label="並び替え" title="並び替え">
-                    <option value="date_desc">📅 新しい順</option>
-                    <option value="date_asc">📅 古い順</option>
-                    <option value="likes_desc">❤️ いいね順</option>
-                    <option value="comments_desc">💬 コメント順</option>
-                </select>
-            </div>
-            
-            <div class="header-actions">
+                
+                <button class="search-submit-btn" onclick="executeSearch()" title="検索" aria-label="検索実行">
+                    検索
+                </button>
+                
+                <button class="tag-search-btn" onclick="openTagSearchModal()" title="タグから検索" aria-label="タグ検索">
+                    <i class="fas fa-tags"></i>
+                    <span>タグ検索</span>
+                </button>
+                
+                <div class="sort-selector">
+                    <select id="sort-select" onchange="changeSortType(this.value)" aria-label="並び替え" title="並び替え">
+                        <option value="date_desc">📅 新しい順</option>
+                        <option value="date_asc">📅 古い順</option>
+                        <option value="likes_desc">❤️ いいね順</option>
+                        <option value="comments_desc">💬 コメント順</option>
+                    </select>
+                </div>
+                
                 <button onclick="cycleTheme()" class="icon-btn theme-toggle" title="テーマ切り替え" aria-label="テーマを切り替え">
                     <i id="theme-icon" class="fas fa-moon" aria-hidden="true"></i>
                 </button>
+                
                 <button onclick="fetchData(this)" class="icon-btn" title="最新情報に更新" aria-label="最新情報に更新">
                     <i class="fas fa-sync-alt" aria-hidden="true"></i>
                 </button>
@@ -371,6 +373,21 @@
             </div>
             <div class="elite-enemy-modal-footer">
                 <button onclick="closeEliteEnemyModal()" class="elite-confirm-btn" aria-label="選択を確定">選択を確定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- タグ検索モーダル -->
+    <div id="tag-search-modal" class="tag-search-modal" role="dialog" aria-modal="true" aria-labelledby="tag-search-modal-title" aria-hidden="true" tabindex="-1" onclick="if(event.target === this) closeTagSearchModal();">
+        <div class="tag-search-modal-content" onclick="event.stopPropagation()">
+            <div class="tag-search-modal-header">
+                <h3 id="tag-search-modal-title">
+                    <i class="fas fa-tags"></i> タグから検索
+                </h3>
+                <button class="modal-close" onclick="closeTagSearchModal()" aria-label="閉じる" role="button" tabindex="0">&times;</button>
+            </div>
+            <div class="tag-search-modal-body" id="tag-search-list">
+                <!-- タグリストがここに動的に挿入されます -->
             </div>
         </div>
     </div>

@@ -2,8 +2,8 @@
    レスポンシブ（モバイル・タブレット対応）
    ============================================ */
 
-/* モバイル対応 */
-@media (max-width: 900px) {
+/* タブレット・モバイル対応（タイトルが折り返す時は二段構造） */
+@media (max-width: 1200px) {
     body { 
         flex-direction: column; 
         height: auto; 
@@ -14,6 +14,26 @@
     /* bodyがメニューで覆われている間のスクロールを禁止 */
     body.sidebar-open {
         overflow: hidden;
+    }
+
+    /* サイドバーオーバーレイ */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1999;
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+        backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+        opacity: 1;
     }
 
     /* サイドバー: フルハイト固定、画面外に隠す */
@@ -52,17 +72,60 @@
     /* PCでは非表示だったハンバーガーボタンを非表示に（移動済み） */
     .mobile-menu-btn { display: flex !important; }
 
-    /* メインヘッダー: トップに固定 */
+    /* メインヘッダー: トップに固定、二段構造 */
+    /* header要素のflex設定 */
     header { 
         position: sticky;
         top: 0; 
         z-index: 900;
-        padding: 10px 15px; 
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        overflow: visible;
     }
-
+    
+    /* 上段：タイトルエリア */
+    #current-view-title {
+        width: 100%;
+        padding: 12px 15px;
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: 600;
+        border-bottom: 1px solid var(--border-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+        order: 1;
+    }
+    
+    /* 下段：ユーティリティボタン */
     .header-actions {
+        display: flex;
         align-items: center; 
-        gap: 15px;
+        justify-content: space-between;
+        width: 100%;
+        padding: 8px 10px;
+        gap: 6px;
+        border-bottom: 1px solid var(--border-color);
+        flex-wrap: nowrap;
+        background: var(--bg-main);
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        order: 2;
+        position: relative;
+    }
+    
+    /* スクロールバーを細く */
+    .header-actions::-webkit-scrollbar {
+        height: 3px;
+    }
+    
+    .header-actions::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 3px;
     }
     
     /* aside内の閉じるボタンを大きく表示 */
@@ -88,24 +151,74 @@
     
     footer { padding-bottom: 40px; }
     
-    /* 検索ボックス調整 */
-    .search-box { margin-right: 10px; flex: 1; justify-content: flex-end;}
+    /* 検索ボックス調整（右側グループの開始） */
+    .search-box { 
+        flex: 0 0 auto;
+        margin-right: 0;
+        margin-left: auto;
+        position: relative;
+    }
 
     .search-box input { 
-        width: 100%; 
-        max-width: 150px;
-        padding: 8px 10px 8px 30px; 
-        font-size: 0.85em; 
+        width: 180px;
+        padding: 8px 12px 8px 36px; 
+        font-size: 0.9em; 
         text-align: left;
     }
     
-    .search-box input:focus { max-width: 200px; }
+    .search-box input:focus { 
+        width: 160px;
+    }
     
     /* アイコンを左端に再配置 */
     .search-box i { 
-        left: 10px; 
+        left: 12px; 
         right: auto; 
-        font-size: 0.9em; 
+        font-size: 1em; 
+    }
+    
+    /* すべてのボタンを適切なサイズに */
+    .icon-btn {
+        padding: 9px 11px !important;
+        font-size: 1.05em !important;
+        min-width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+    }
+    
+    /* ハンバーガーメニューボタン */
+    .mobile-menu-btn {
+        padding: 9px 11px !important;
+        min-width: 38px;
+        height: 38px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* 検索ボタン */
+    .search-submit-btn {
+        padding: 9px 14px !important;
+        font-size: 0.9em !important;
+        height: 38px;
+        flex-shrink: 0;
+    }
+    
+    /* タグ検索ボタン - アイコンのみ */
+    .tag-search-btn {
+        padding: 9px 11px !important;
+        min-width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+    }
+    
+    .tag-search-btn span {
+        display: none;
+    }
+    
+    .tag-search-btn i {
+        margin: 0;
+        font-size: 1.05em;
     }
     
     /* モーダルの調整 */
@@ -166,9 +279,35 @@
         width: 100%;
     }
 
+    /* 並び替えセレクタ */
+    .sort-selector {
+        flex: 0 0 auto;
+    }
+    
+    .sort-selector select {
+        padding: 8px 12px;
+        font-size: 0.9em;
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        color: var(--fg-primary);
+        border-radius: 6px;
+        height: 38px;
+    }
+    
+    /* 検索履歴 */
+    .search-history {
+        width: 280px;
+        max-width: calc(100vw - 40px);
+        z-index: 10000 !important;
+        position: fixed !important;
+        top: 110px !important;
+        left: auto !important;
+        right: 10px !important;
+    }
+    
     /* トースト通知 */
     .toast-container {
-        top: 10px;
+        bottom: 10px;
         right: 10px;
         left: 10px;
     }
@@ -179,8 +318,8 @@
     }
 }
 
-/* PCではハンバーガーボタンを隠す */
-@media (min-width: 901px) {
+/* PCではハンバーガーボタンを隠す（1201px以上） */
+@media (min-width: 1201px) {
     .mobile-menu-btn {
         display: none !important;
     }
@@ -188,6 +327,89 @@
     /* PCではサイドバー内の閉じるボタンも隠す */
     .mobile-close-btn {
         display: none !important;
+    }
+    
+    /* PCではオーバーレイを表示しない */
+    .sidebar-overlay {
+        display: none !important;
+    }
+}
+
+/* 大画面（1201px以上）ではヘッダーを一列に戻す */
+@media (min-width: 1201px) {
+    /* PCではヘッダーを一列に戻す */
+    header {
+        flex-direction: row !important;
+        padding: 15px 30px !important;
+        gap: 20px !important;
+        align-items: center !important;
+    }
+    
+    /* タイトルを左側に */
+    #current-view-title {
+        padding: 0 !important;
+        border-bottom: none !important;
+        text-align: left !important;
+        width: auto !important;
+        white-space: normal !important;
+        order: 1 !important;
+        margin-right: auto !important;
+        font-size: 1.5em !important;
+    }
+    
+    /* ボタン群を右側に */
+    .header-actions {
+        border-bottom: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+        width: auto !important;
+        gap: 10px !important;
+        flex-wrap: nowrap !important;
+        order: 2 !important;
+        overflow: visible !important;
+    }
+    
+    /* PCではハンバーガーメニューを非表示 */
+    .mobile-menu-btn {
+        display: none !important;
+    }
+    
+    /* 検索ボックスを元のサイズに */
+    .search-box input {
+        width: 220px !important;
+        padding: 10px 15px 10px 45px !important;
+        font-size: 1em !important;
+        text-align: right !important;
+    }
+    
+    .search-box input:focus {
+        width: 280px !important;
+    }
+    
+    .search-box i {
+        left: 18px !important;
+        font-size: 1.1em !important;
+    }
+    
+    /* タグ検索ボタンのテキストを表示 */
+    .tag-search-btn span {
+        display: inline !important;
+    }
+    
+    /* ボタンサイズを元に戻す */
+    .icon-btn,
+    .search-submit-btn,
+    .tag-search-btn {
+        padding: 10px 16px !important;
+        font-size: 0.9em !important;
+        height: auto !important;
+    }
+    
+    /* 並び替えセレクタのサイズ */
+    .sort-selector select {
+        padding: 8px 12px !important;
+        font-size: 0.9em !important;
+        height: auto !important;
     }
 }
 
