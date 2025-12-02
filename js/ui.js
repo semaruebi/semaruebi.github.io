@@ -320,7 +320,9 @@ function renderHome() {
     const titleEl = document.getElementById('current-view-title');
     if (!container) return;
     
-    if (titleEl) titleEl.innerText = 'エリまね！';
+    if (titleEl) {
+        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">エリまね！';
+    }
     
     // 投稿が全くない場合の空の状態
     if (!allData.posts || allData.posts.length === 0) {
@@ -396,7 +398,9 @@ function toggleHomeSection(sectionName) {
 function filterPosts(region, route) {
     currentFilter = { region, route };
     const titleEl = document.getElementById('current-view-title');
-    if (titleEl) titleEl.innerText = `${escapeHtml(region)} > ${escapeHtml(route)}`;
+    if (titleEl) {
+        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">${escapeHtml(region)} > ${escapeHtml(route)}`;
+    }
     renderPosts();
     closeSidebarOnNavigation();
 }

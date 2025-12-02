@@ -63,7 +63,9 @@ function renderBookmarks() {
     const titleEl = document.getElementById('current-view-title');
     
     if (!container) return;
-    if (titleEl) titleEl.innerText = '📌 ブックマーク';
+    if (titleEl) {
+        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">📌 ブックマーク';
+    }
     
     // ブックマークした投稿を取得
     const bookmarkedPosts = allData.posts.filter(p => myBookmarks.includes(p.id));

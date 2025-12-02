@@ -11,7 +11,9 @@ function renderStats() {
     const titleEl = document.getElementById('current-view-title');
     
     if (!container) return;
-    if (titleEl) titleEl.innerText = '📊 統計情報';
+    if (titleEl) {
+        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">📊 統計情報';
+    }
     
     // データが不足している場合
     if (!allData.posts || allData.posts.length === 0) {
@@ -299,7 +301,7 @@ function generatePopularElitesHtml(elites) {
                 <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0; background: var(--bg-sidebar); border-radius: 8px; border: 2px solid var(--border-color);">
                     ${imageUrl ? 
                         `<img src="${imageUrl}" alt="${escapeHtml(elite.name)}" style="width: 56px; height: 56px; object-fit: contain; border-radius: 6px;">` : 
-                        `<i class="fas fa-dragon" style="font-size: 2em; color: var(--purple);"></i>`
+                        '<i class="fas fa-dragon" style="font-size: 2em; color: var(--purple);"></i>'
                     }
                 </div>
                 <div style="flex: 1; min-width: 0;">

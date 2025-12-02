@@ -96,6 +96,16 @@
         text-overflow: ellipsis;
         margin: 0;
         order: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    /* タブレット・スマホでのサイトアイコン */
+    #current-view-title .site-icon {
+        width: 28px;
+        height: 28px;
     }
     
     /* 下段：ユーティリティボタン */
@@ -717,6 +727,12 @@
     #current-view-title {
         font-size: 1.1em !important;
         padding: 10px 12px !important;
+    }
+    
+    /* 極小スマホでのサイトアイコン */
+    #current-view-title .site-icon {
+        width: 24px;
+        height: 24px;
     }
     
     /* 検索ボックス */

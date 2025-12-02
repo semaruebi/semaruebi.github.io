@@ -117,7 +117,7 @@ function openTagSearchModal() {
                 html += `<div class="tag-item elite-tag" onclick="searchByTagFromModal('${tagJs}')"><i class="fas fa-dragon"></i> ${escapeHtml(tag)}</div>`;
             }
         });
-        html += `</div></div>`;
+        html += '</div></div>';
     }
     
     // 通常タグカテゴリ
@@ -130,7 +130,7 @@ function openTagSearchModal() {
         normalTags.forEach(tag => {
             html += `<div class="tag-item" onclick="searchByTagFromModal('${escapeHtml(tag).replace(/'/g, "\\'")}')"><i class="fas fa-tag"></i> ${escapeHtml(tag)}</div>`;
         });
-        html += `</div></div>`;
+        html += '</div></div>';
     }
     
     if (html === '') {
@@ -227,7 +227,9 @@ function filterBySearch() {
         return matchesContent(p) || (p.tags && hasPartialTag(p.tags, keyword));
     });
     
-    if (titleEl) titleEl.innerText = `検索: "${escapeHtml(keyword)}"`;
+    if (titleEl) {
+        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">検索: "${escapeHtml(keyword)}"`;
+    }
     
     if (filtered.length === 0) {
         container.innerHTML = `
@@ -292,7 +294,6 @@ function searchByTag(tag) {
     const input = document.getElementById('search-input');
     if (input) {
         input.value = tag;
-        searchType = 'tag';
         filterBySearch();
     }
 }
