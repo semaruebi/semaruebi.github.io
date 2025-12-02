@@ -1,9 +1,42 @@
-# GASスクリプト（機密情報を含む可能性があるため）
+# Dependencies
+node_modules/
+package-lock.json
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Build output
+dist/
+build/
+
+# Test coverage
+coverage/
+
+# Private/Sensitive
 gas.txt
-
-# ハンドオフドキュメント（内部用）
-handoff.md
-
-# 旧ファイル（バックアップ）
-old/
-
+*.private.*

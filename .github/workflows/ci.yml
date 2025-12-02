@@ -1,0 +1,67 @@
+name: CI - 自動テスト💉
+
+on:
+  push:
+    branches: [ main, develop, feature/** ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: 🧪 品質チェック
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 コードをチェックアウト
+        uses: actions/checkout@v4
+      
+      - name: 🟢 Node.js セットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: 📦 依存関係をインストール
+        run: npm ci
+      
+      - name: 🔍 JavaScript リント
+        run: npm run lint:js
+        continue-on-error: true
+      
+      - name: 🎨 CSS リント
+        run: npm run lint:css
+        continue-on-error: true
+      
+      - name: 📄 HTML バリデーション
+        run: npm run validate:html
+        continue-on-error: true
+      
+      - name: 🖼️ 画像存在確認
+        run: npm run check:images
+      
+      - name: 📊 テスト結果サマリー
+        if: always()
+        run: echo "✨ テスト完了なのよ！"
+
+  deploy:
+    name: 🚀 GitHub Pages デプロイ
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    steps:
+      - name: 📥 コードをチェックアウト
+        uses: actions/checkout@v4
+      
+      - name: 🚀 GitHub Pages デプロイ
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          exclude_assets: '.github,scripts,*.md,gas.txt'
+

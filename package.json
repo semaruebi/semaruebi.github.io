@@ -1,0 +1,23 @@
+{
+  "name": "gieedb",
+  "version": "4.0.0",
+  "description": "400EENote - 精鋭狩りRTA Knowledge Base 💉",
+  "scripts": {
+    "lint:js": "eslint js/**/*.js --max-warnings 0",
+    "lint:css": "stylelint \"css/**/*.css\"",
+    "validate:html": "node scripts/validate-html.js",
+    "check:images": "node scripts/check-images.js",
+    "test": "npm run lint:js && npm run lint:css && npm run validate:html && npm run check:images",
+    "update:elite-images": "node scripts/update-elite-images.js"
+  },
+  "keywords": ["genshin", "rta", "knowledge-base", "sigewinne"],
+  "author": "@_c_aca",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "stylelint": "^16.2.0",
+    "stylelint-config-standard": "^36.0.0",
+    "html-validate": "^8.11.0"
+  }
+}
+
