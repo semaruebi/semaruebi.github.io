@@ -102,6 +102,45 @@ async function fetchData(btnElement = null, forceRefresh = false) {
 }
 
 /**
+ * パスワードを検証（クライアント側）
+ */
+async function verifyPasswordAPI(postId, password) {
+    try {
+        // 投稿データを取得
+        const post = allData.posts.find(p => p.id === postId);
+        if (!post) {
+            console.error('Post not found:', postId);
+            return false;
+        }
+        
+        const storedHash = post.password || '';
+        
+        // 管理者パスワードのチェック
+        const adminHash = await hashPassword(password);
+        if (adminHash === CONFIG.ADMIN_PASSWORD_HASH) {
+            return true;
+        }
+        
+        // 投稿パスワードが設定されていない場合は、管理者パスワードのみ許可
+        if (!storedHash || storedHash === '') {
+            return false;
+        }
+        
+        // 入力パスワードが空の場合は拒否
+        if (!password || password === '') {
+            return false;
+        }
+        
+        // 入力パスワードをハッシュ化して比較
+        const inputHash = await hashPassword(password);
+        return inputHash === storedHash;
+    } catch (err) {
+        console.error('Password verification error:', err);
+        return false;
+    }
+}
+
+/**
  * コメント送信
  */
 async function submitComment(postId, parentId) {

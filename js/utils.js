@@ -36,6 +36,32 @@ function debounce(func, wait) {
 }
 
 /**
+ * SHA-256ハッシュを計算（GAS側と同じ形式）
+ */
+async function hashPassword(password) {
+    if (!password || password === '') return '';
+    
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => ('0' + b.toString(16)).slice(-2)).join('');
+    return hashHex;
+}
+
+/**
+ * テスト用：管理者パスワードのハッシュを計算
+ * ブラウザコンソールで実行： testAdminPasswordHash()
+ */
+async function testAdminPasswordHash() {
+    const adminPassword = 'frogDel400EEposts';
+    const hash = await hashPassword(adminPassword);
+    console.log('管理者パスワードのハッシュ:', hash);
+    console.log('このハッシュをCONFIG.ADMIN_PASSWORD_HASHに設定してね💉');
+    return hash;
+}
+
+/**
  * リトライ付きフェッチ
  */
 async function fetchWithRetry(url, options = {}, retries = CONFIG.MAX_RETRIES) {

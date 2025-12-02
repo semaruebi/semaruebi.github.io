@@ -404,10 +404,20 @@
     <div id="tag-search-modal" class="tag-search-modal" role="dialog" aria-modal="true" aria-labelledby="tag-search-modal-title" aria-hidden="true" tabindex="-1" onclick="if(event.target === this) closeTagSearchModal();">
         <div class="tag-search-modal-content" onclick="event.stopPropagation()">
             <div class="tag-search-modal-header">
-                <h3 id="tag-search-modal-title">
-                    <i class="fas fa-tags"></i> タグから検索
-                </h3>
-                <button class="modal-close" onclick="closeTagSearchModal()" aria-label="閉じる" role="button" tabindex="0">&times;</button>
+                <div class="tag-search-modal-header-top">
+                    <h3 id="tag-search-modal-title">
+                        <i class="fas fa-tags"></i> タグから検索
+                    </h3>
+                    <button class="modal-close" onclick="closeTagSearchModal()" aria-label="閉じる" role="button" tabindex="0">&times;</button>
+                </div>
+                <div class="tag-search-modal-header-bottom">
+                    <button id="filter-mode-or" class="filter-mode-btn active" onclick="setFilterMode('OR')">
+                        いずれかを含む (OR)
+                    </button>
+                    <button id="filter-mode-and" class="filter-mode-btn" onclick="setFilterMode('AND')">
+                        すべて含む (AND)
+                    </button>
+                </div>
             </div>
             <div class="tag-search-modal-body" id="tag-search-list">
                 <!-- タグリストがここに動的に挿入されます -->
@@ -430,6 +440,11 @@
     <script src="js/ui.js"></script>
     <script src="js/card.js"></script>
     <script src="js/animations.js"></script>
+    <script src="js/share.js"></script>
+    <script src="js/draft.js"></script>
+    <script src="js/lazy-loading.js"></script>
+    <script src="js/multi-tag-filter.js"></script>
+    <script src="js/notifications.js"></script>
     <script src="js/card-expand.js"></script>
     <script src="js/navigation.js"></script>
     <script src="js/drag-scroll.js"></script>

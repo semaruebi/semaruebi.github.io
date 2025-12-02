@@ -408,9 +408,10 @@ function filterPosts(region, route) {
         closePostForm();
     }
     
+    // タイトルは固定のまま（エリかるて！）
     const titleEl = document.getElementById('current-view-title');
     if (titleEl) {
-        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">${escapeHtml(region)} > ${escapeHtml(route)}`;
+        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">エリかるて！`;
     }
     renderPosts();
     closeSidebarOnNavigation();

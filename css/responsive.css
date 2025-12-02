@@ -7,8 +7,50 @@
     body { 
         flex-direction: column; 
         height: auto; 
-        overflow: hidden auto; 
+        min-height: 100vh;
+        overflow: visible; 
         -webkit-overflow-scrolling: touch;
+    }
+    
+    main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 60px);
+    }
+    
+    .content-scroll {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    
+    #main-container {
+        flex: 1 0 auto;
+    }
+    
+    footer {
+        flex-shrink: 0;
+        margin-top: 0;
+        padding: 8px 10px !important;
+        font-size: 0.7em !important;
+    }
+    
+    footer p {
+        margin: 2px 0 !important;
+        line-height: 1.3 !important;
+    }
+    
+    .footer-buttons {
+        margin-top: 10px !important;
+        gap: 8px !important;
+    }
+    
+    .about-btn,
+    .contact-btn {
+        padding: 6px 12px !important;
+        font-size: 0.85em !important;
     }
     
     /* bodyがメニューで覆われている間のスクロールを禁止 */
@@ -59,15 +101,21 @@
 
     /* サイドバーヘッダー（モバイル用：閉じるボタン配置） */
     .sidebar-header {
-        padding: 15px 20px;
+        padding: 12px 16px;
         height: auto; 
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
         border-bottom: 1px solid var(--border-color);
         background: var(--bg-sidebar); 
         flex-shrink: 0;
+        font-size: 0.95em;
+    }
+    
+    .sidebar-header img {
+        width: 36px;
+        height: 36px;
     }
 
     /* メインヘッダー: トップに固定、二段構造 */
@@ -87,9 +135,9 @@
     /* 上段：タイトルエリア */
     #current-view-title {
         width: 100%;
-        padding: 12px 15px;
+        padding: 8px 12px;
         text-align: center;
-        font-size: 1.3em;
+        font-size: 1.1em;
         font-weight: 600;
         border-bottom: 1px solid var(--border-color);
         white-space: nowrap;
@@ -100,13 +148,34 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 6px;
+        max-width: 100vw;
+        box-sizing: border-box;
     }
     
     /* タブレット・スマホでのサイトアイコン */
     #current-view-title .site-icon {
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
+    }
+    
+    /* ボタンをコンパクトに */
+    .icon-btn,
+    .mobile-menu-btn {
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        padding: 6px !important;
+        font-size: 0.9em !important;
+    }
+    
+    .search-submit-btn,
+    .tag-search-btn {
+        padding: 6px 10px !important;
+        font-size: 0.75em !important;
+        height: 32px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
     }
     
     /* 下段：ユーティリティボタン */
@@ -115,8 +184,8 @@
         align-items: center; 
         justify-content: space-between;
         width: 100%;
-        padding: 8px 10px;
-        gap: 6px;
+        padding: 6px 8px;
+        gap: 3px;
         border-bottom: 1px solid var(--border-color);
         flex-wrap: nowrap;
         background: var(--bg-main);
@@ -127,6 +196,8 @@
         -webkit-overflow-scrolling: touch;
         order: 2;
         position: relative;
+        max-width: 100vw;
+        box-sizing: border-box;
     }
     
     /* スクロールバーを細く */
@@ -164,44 +235,53 @@
     
     /* 検索ボックス調整（右側グループの開始） */
     .search-box { 
-        flex: 0 0 auto;
+        flex: 0 1 auto;
         margin-right: 0;
         margin-left: auto;
         position: relative;
+        max-width: 160px;
+        min-width: 100px;
     }
 
     .search-box input { 
-        width: 180px;
-        padding: 8px 12px 8px 36px; 
-        font-size: 0.9em; 
+        width: 100%;
+        max-width: 140px;
+        min-width: 100px;
+        padding: 6px 10px 6px 32px; 
+        font-size: 0.85em; 
         text-align: left;
+        height: 32px;
+        box-sizing: border-box;
     }
     
     .search-box input:focus { 
-        width: 160px;
+        width: 100%;
+        max-width: 140px;
     }
     
     /* アイコンを左端に再配置 */
     .search-box i { 
-        left: 12px; 
+        left: 10px; 
         right: auto; 
-        font-size: 1em; 
+        font-size: 0.9em; 
     }
     
     /* すべてのボタンを適切なサイズに */
     .icon-btn {
-        padding: 9px 11px !important;
-        font-size: 1.05em !important;
-        min-width: 38px;
-        height: 38px;
+        padding: 7px 9px !important;
+        font-size: 0.95em !important;
+        min-width: 34px !important;
+        width: 34px !important;
+        height: 34px !important;
         flex-shrink: 0;
     }
     
     /* ハンバーガーメニューボタン */
     .mobile-menu-btn {
-        padding: 9px 11px !important;
-        min-width: 38px;
-        height: 38px;
+        padding: 7px 9px !important;
+        min-width: 34px !important;
+        width: 34px !important;
+        height: 34px !important;
         display: flex !important;
         align-items: center;
         justify-content: center;
@@ -248,13 +328,17 @@
 
     /* フッターボタン */
     .footer-buttons {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     }
     
     .about-btn,
     .contact-btn {
-        width: 100%;
+        width: auto;
+        max-width: 180px;
+        flex: 0 1 auto;
     }
     
     .about-modal-content,
@@ -832,6 +916,57 @@
     .tag-radio-label {
         padding: 7px 12px;
         font-size: 0.8em;
+    }
+    
+    /* タグ検索モーダルのモバイル対応 */
+    .tag-search-modal-content {
+        width: 95% !important;
+        max-height: 90vh !important;
+    }
+    
+    .multi-tag-controls {
+        padding: 8px !important;
+    }
+    
+    .filter-mode-switch {
+        margin-bottom: 6px !important;
+    }
+    
+    .filter-mode-btn {
+        padding: 4px 10px !important;
+        font-size: 0.7em !important;
+    }
+    
+    .selected-tags-display {
+        padding: 6px !important;
+        gap: 4px !important;
+        max-height: 60px !important;
+        overflow-y: auto !important;
+        min-height: 30px !important;
+    }
+    
+    .selected-filter-tag {
+        padding: 2px 6px !important;
+        font-size: 0.7em !important;
+    }
+    
+    .remove-tag-btn {
+        width: 12px !important;
+        height: 12px !important;
+        font-size: 9px !important;
+        min-width: 12px !important;
+    }
+    
+    .multi-tag-actions {
+        gap: 4px !important;
+        flex-wrap: nowrap !important;
+    }
+    
+    .clear-filter-btn,
+    .apply-filter-btn {
+        padding: 5px 10px !important;
+        font-size: 0.75em !important;
+        white-space: nowrap !important;
     }
 }
 

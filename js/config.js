@@ -16,5 +16,9 @@ const CONFIG = {
     
     // トースト通知設定
     TOAST_DURATION: 3000, // ミリ秒
+    
+    // 管理者パスワードのハッシュ（SHA-256）
+    // GAS側の ADMIN_PASSWORD = "frogDel400EEposts" のハッシュ
+    ADMIN_PASSWORD_HASH: '024e7190574745b0a21434a6097b557797e372dc3265d9af70e32512d4dfba60'
 };
 

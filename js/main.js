@@ -82,5 +82,56 @@ window.onload = function() {
     
     // ドラッグアンドドロップ機能
     setupDragAndDrop();
+    
+    // 下書き保存機能の初期化
+    if (typeof setupAutoSave === 'function') {
+        setupAutoSave();
+        
+        // ページロード時に下書きを復元
+        setTimeout(() => {
+            if (typeof loadDraft === 'function') {
+                loadDraft();
+            }
+        }, 500);
+    }
+    
+    // 画像クリックイベントのデリゲーション
+    setupImageClickHandler();
 };
+
+/**
+ * 画像クリックハンドラーをセットアップ
+ */
+function setupImageClickHandler() {
+    // bodyにイベントリスナーを追加（動的に追加される要素にも対応）
+    document.body.addEventListener('click', (e) => {
+        // 画像クリックを検出
+        if (!e.target.classList.contains('post-image')) return;
+        
+        // すぐにイベント伝播を停止
+        e.stopPropagation();
+        e.preventDefault();
+        
+        const img = e.target;
+        const gallery = img.closest('.image-gallery');
+        if (!gallery) return;
+        
+        const imagesJson = gallery.dataset.images;
+        if (!imagesJson) return;
+        
+        try {
+            const images = JSON.parse(decodeURIComponent(imagesJson));
+            const index = parseInt(img.dataset.index || '0');
+            const clickedUrl = images[index];
+            
+            if (images.length > 1) {
+                openImageModal(clickedUrl, images);
+            } else {
+                openImageModal(clickedUrl);
+            }
+        } catch (err) {
+            console.error('Image click error:', err);
+        }
+    }, true); // useCapture = true で確実にキャッチ
+}
 

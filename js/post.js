@@ -5,6 +5,7 @@
 // 編集用の状態管理
 let editingPostId = null;
 let editingPostData = null;
+let editingPostPassword = null;
 
 /**
  * フォームのバリデーション処理
@@ -156,6 +157,11 @@ async function postData() {
             clearSelectedEliteEnemies();
         }
         
+        // 下書きをクリア
+        if (typeof clearDraft === 'function') {
+            clearDraft();
+        }
+        
         togglePostForm();
         setTimeout(() => fetchData(null, true), 1500);
     } catch (err) {
@@ -174,8 +180,39 @@ async function postData() {
 }
 
 async function deletePost(id) {
+    // 投稿詳細モーダルが開いていたら閉じる
+    const detailModal = document.getElementById('card-detail-modal');
+    if (detailModal && detailModal.style.display !== 'none') {
+        closeCardDetailModal();
+    }
+    
+    // パスワード確認
     const password = prompt('削除パスワードを見せてちょうだい。\n（投稿時に設定したパスワード、または管理者パスワード）');
     if (!password) return;
+    
+    // パスワード検証中の表示
+    showPostingModal('パスワード確認中…💉');
+    
+    try {
+        // GAS側でパスワード検証
+        const isValid = await verifyPasswordAPI(id, password);
+        
+        hidePostingModal();
+        
+        if (!isValid) {
+            showToast('パスワードが違うみたい。もしかしてワルい子？💉', 'error');
+            return;
+        }
+        
+        // パスワードが正しい場合のみ削除確認
+        showToast('パスワード確認完了！💉', 'success');
+        
+    } catch (err) {
+        hidePostingModal();
+        console.error('Password verification error:', err);
+        showToast('パスワード確認に失敗したわ。もう一度試してちょうだい💉', 'error');
+        return;
+    }
     
     if (!confirm('本当に削除するの？もう、治らないみたい…になっちゃうわよ？')) return;
     
@@ -196,12 +233,19 @@ async function deletePost(id) {
             hidePostingModal();
         }, 1500);
     } catch (err) {
-        showToast('パスワードが違うみたい。もしかしてワルい子？', 'error');
+        console.error('Delete error:', err);
+        showToast('削除に失敗したわ。パスワードが違うかもしれないわね💉', 'error');
         hidePostingModal();
     }
 }
 
 async function editPost(id) {
+    // 投稿詳細モーダルが開いていたら閉じる
+    const detailModal = document.getElementById('card-detail-modal');
+    if (detailModal && detailModal.style.display !== 'none') {
+        closeCardDetailModal();
+    }
+    
     // 投稿データを取得
     const post = allData.posts.find(p => p.id === id);
     if (!post) {
@@ -213,9 +257,34 @@ async function editPost(id) {
     const password = prompt('編集パスワードを見せてちょうだい。\n（投稿時に設定したパスワード、または管理者パスワード）');
     if (!password) return;
     
+    // パスワード検証中の表示
+    showPostingModal('パスワード確認中…💉');
+    
+    try {
+        // GAS側でパスワード検証
+        const isValid = await verifyPasswordAPI(id, password);
+        
+        hidePostingModal();
+        
+        if (!isValid) {
+            showToast('パスワードが違うみたい。もしかしてワルい子？💉', 'error');
+            return;
+        }
+        
+        // パスワードが正しい場合のみ編集モードに切り替え
+        showToast('パスワード確認完了！編集モードに入るわよ💉', 'success');
+        
+    } catch (err) {
+        hidePostingModal();
+        console.error('Password verification error:', err);
+        showToast('パスワード確認に失敗したわ。もう一度試してちょうだい💉', 'error');
+        return;
+    }
+    
     // 編集モードに切り替え
     editingPostId = id;
     editingPostData = post;
+    editingPostPassword = password;
     
     // フォームを開く
     const form = document.getElementById('post-form-container');
@@ -230,6 +299,10 @@ async function editPost(id) {
     if (titleInput) titleInput.value = post.title || '';
     const contentInput = document.getElementById('input-content');
     if (contentInput) contentInput.value = post.content || '';
+    
+    // パスワードフィールドに設定
+    const passwordInput = document.getElementById('input-password');
+    if (passwordInput) passwordInput.value = password;
     
     // タグを設定
     const eliteTags = [];
@@ -315,6 +388,7 @@ function cancelEditMode() {
     // 編集状態をリセット
     editingPostId = null;
     editingPostData = null;
+    editingPostPassword = null;
     
     // フォームをリセット
     const titleInput = document.getElementById('input-title');
@@ -430,6 +504,7 @@ async function updatePost(id, password) {
         // フォームリセット
         editingPostId = null;
         editingPostData = null;
+        editingPostPassword = null;
         const titleInput = document.getElementById('input-title');
         if (titleInput) titleInput.value = '';
         const contentInput = document.getElementById('input-content');
@@ -468,7 +543,22 @@ async function updatePost(id, password) {
         setTimeout(() => fetchData(null, true), 1500);
     } catch (err) {
         console.error('Update error:', err);
-        showToast('パスワードが違うみたい。もしかしてワルい子？', 'error');
+        showToast('更新に失敗したわ。パスワードが違うかもしれないわね。確認してちょうだい💉', 'error');
+        
+        // エラー時は編集モードを維持（パスワードのみクリア）
+        const passwordInput = document.getElementById('input-password');
+        if (passwordInput) passwordInput.value = '';
+        editingPostPassword = null;
+        
+        // パスワード再入力を促す
+        setTimeout(() => {
+            const newPassword = prompt('パスワードが間違っているようよ。\n正しいパスワードを入力してちょうだい。\n（投稿時に設定したパスワード、または管理者パスワード）');
+            if (newPassword) {
+                editingPostPassword = newPassword;
+                if (passwordInput) passwordInput.value = newPassword;
+                showToast('パスワードを設定したわ。もう一度更新ボタンを押してちょうだい💉', 'info');
+            }
+        }, 500);
     } finally {
         isPosting = false;
         btn.disabled = originalDisabled;

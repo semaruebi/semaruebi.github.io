@@ -103,18 +103,22 @@ function openTagSearchModal() {
     // 精鋭タグカテゴリ
     if (eliteTagsArray.length > 0) {
         html += `
-            <div class="tag-category">
+            <div class="tag-category elite-category">
                 <h4 class="tag-category-title"><i class="fas fa-dragon"></i> 精鋭</h4>
-                <div class="tag-list">
+                <div class="tag-list elite-tag-list">
         `;
         eliteTagsArray.forEach(tag => {
             const imageUrl = typeof getEliteEnemyImagePath === 'function' ? getEliteEnemyImagePath(tag) : null;
-            const tagJs = escapeHtml(tag).replace(/'/g, "\\'");
+            const tagEscaped = escapeHtml(tag);
             
             if (imageUrl) {
-                html += `<div class="tag-item elite-tag elite-tag-with-image" onclick="searchByTagFromModal('${tagJs}')"><img src="${imageUrl}" alt="${escapeHtml(tag)}" class="elite-tag-icon-img" loading="lazy"> ${escapeHtml(tag)}</div>`;
+                html += `
+                    <div class="tag-search-item elite-tag elite-tag-with-image" data-tag="${tagEscaped}">
+                        <img src="${imageUrl}" alt="${tagEscaped}" loading="lazy">
+                        <span class="elite-tag-name">${tagEscaped}</span>
+                    </div>`;
             } else {
-                html += `<div class="tag-item elite-tag" onclick="searchByTagFromModal('${tagJs}')"><i class="fas fa-dragon"></i> ${escapeHtml(tag)}</div>`;
+                html += `<div class="tag-search-item elite-tag" data-tag="${tagEscaped}"><i class="fas fa-dragon"></i> ${tagEscaped}</div>`;
             }
         });
         html += '</div></div>';
@@ -123,12 +127,13 @@ function openTagSearchModal() {
     // 通常タグカテゴリ
     if (normalTags.length > 0) {
         html += `
-            <div class="tag-category">
+            <div class="tag-category normal-tag-category">
                 <h4 class="tag-category-title"><i class="fas fa-tags"></i> タグ</h4>
-                <div class="tag-list">
+                <div class="tag-list normal-tag-list">
         `;
         normalTags.forEach(tag => {
-            html += `<div class="tag-item" onclick="searchByTagFromModal('${escapeHtml(tag).replace(/'/g, "\\'")}')"><i class="fas fa-tag"></i> ${escapeHtml(tag)}</div>`;
+            const tagEscaped = escapeHtml(tag);
+            html += `<div class="tag-search-item normal-tag" data-tag="${tagEscaped}">${tagEscaped}</div>`;
         });
         html += '</div></div>';
     }
@@ -227,12 +232,27 @@ function filterBySearch() {
         return matchesContent(p) || (p.tags && hasPartialTag(p.tags, keyword));
     });
     
+    // タイトルは固定のまま（エリかるて！）
     if (titleEl) {
-        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">検索: "${escapeHtml(keyword)}"`;
+        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">エリかるて！`;
     }
     
+    // 検索結果を投稿フォームの位置に表示
+    let html = `
+        <div class="search-result-header" style="background: var(--bg-sidebar); padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid var(--purple); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <i class="fas fa-search" style="color: var(--purple); font-size: 1.2em;"></i>
+                <h2 style="margin: 0; color: var(--purple); font-size: 1.3em;">検索結果</h2>
+            </div>
+            <p style="margin: 0; color: var(--comment); font-size: 0.95em;">
+                「<span style="color: var(--cyan); font-weight: bold;">${escapeHtml(keyword)}</span>」で検索中 
+                <span style="color: var(--green);">（${filtered.length}件）</span>
+            </p>
+        </div>
+    `;
+    
     if (filtered.length === 0) {
-        container.innerHTML = `
+        html += `
             <div class="empty-state" style="text-align: center; padding: 60px 20px;">
                 <img src="assets/images/sigewinne/ofuton.webp" alt="リラックス中のシグウィン" style="width: 150px; height: 150px; object-fit: contain; margin: 0 auto 20px; display: block;">
                 <p style="font-size: 1.2em; color: var(--cyan); margin-bottom: 10px;">見つからなかったのよ…</p>
@@ -240,13 +260,13 @@ function filterBySearch() {
             </div>
         `;
     } else {
-        let html = '';
         filtered.forEach(p => html += createCardHtml(p, true));
-        container.innerHTML = html;
-        
-        // Twitter Widgetsを初期化
-        initTwitterWidgets();
     }
+    
+    container.innerHTML = html;
+    
+    // Twitter Widgetsを初期化
+    initTwitterWidgets();
     
     // 検索履歴を閉じる
     const history = document.getElementById('search-history');

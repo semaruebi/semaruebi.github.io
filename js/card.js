@@ -75,13 +75,13 @@ function removeVideoUrls(content) {
 function createImageHtml(imageUrl) {
     if (!imageUrl) return '';
     
-    const urls = imageUrl.split(',');
-    let html = '<div class="image-gallery">';
-    urls.forEach(url => {
-        if (url.trim()) {
-            const escapedUrl = escapeUrl(url.trim());
-            html += `<img src="${escapedUrl}" class="post-image" referrerpolicy="no-referrer" onclick="event.stopPropagation(); openImageModal('${escapedUrl}')" alt="投稿画像" loading="lazy">`;
-        }
+    const urls = imageUrl.split(',').map(url => url.trim()).filter(url => url);
+    const urlsJsonEncoded = encodeURIComponent(JSON.stringify(urls));
+    
+    let html = `<div class="image-gallery" data-images="${urlsJsonEncoded}">`;
+    urls.forEach((url, index) => {
+        // data-indexを使ってクリック時に画像リストを取得
+        html += `<img src="${url}" class="post-image" data-index="${index}" referrerpolicy="no-referrer" alt="投稿画像 ${index + 1}" loading="lazy">`;
     });
     html += '</div>';
     return html;
@@ -220,6 +220,9 @@ function createCardHtml(post, hideRegionRoute = false) {
                     <button class="bookmark-btn ${isBookmarked(post.id) ? 'bookmarked' : ''}" onclick="event.stopPropagation(); toggleBookmark('${postIdJs}', this)" aria-label="${isBookmarked(post.id) ? 'ブックマークを解除' : 'ブックマークに追加'}" title="${isBookmarked(post.id) ? 'ブックマークを解除' : 'ブックマークに追加'}">
                         <i class="${isBookmarked(post.id) ? 'fas' : 'far'} fa-bookmark" aria-hidden="true"></i>
                     </button>
+                    <button class="share-btn" onclick="event.stopPropagation(); showShareMenu('${postIdJs}', this)" aria-label="共有" title="共有">
+                        <i class="fas fa-share-alt" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
             <div class="comments-section" onclick="event.stopPropagation()">
@@ -342,7 +345,20 @@ function renderCommentTree(allComments, parentId, postId) {
 
 function toggleComments(postId) {
     const postIdEscaped = escapeUrl(postId);
-    const el = document.getElementById(`comments-${postIdEscaped}`);
+    
+    // まずモーダル内を優先的に検索
+    const modal = document.getElementById('card-detail-modal');
+    let el = null;
+    
+    if (modal && modal.style.display !== 'none') {
+        el = modal.querySelector(`#comments-${postIdEscaped}`);
+    }
+    
+    // モーダル内になければメイン画面から検索
+    if (!el) {
+        el = document.getElementById(`comments-${postIdEscaped}`);
+    }
+    
     if (!el) return;
     el.classList.toggle('open');
     el.setAttribute('aria-expanded', el.classList.contains('open'));
@@ -350,7 +366,20 @@ function toggleComments(postId) {
 
 function showReplyForm(postId, commentId) {
     const targetId = commentId ? escapeUrl(commentId) : `${escapeUrl(postId)}-root`;
-    const form = document.getElementById(`reply-form-${targetId}`);
+    
+    // まずモーダル内を優先的に検索
+    const modal = document.getElementById('card-detail-modal');
+    let form = null;
+    
+    if (modal && modal.style.display !== 'none') {
+        form = modal.querySelector(`#reply-form-${targetId}`);
+    }
+    
+    // モーダル内になければメイン画面から検索
+    if (!form) {
+        form = document.getElementById(`reply-form-${targetId}`);
+    }
+    
     if (!form) return;
     
     const isVisible = form.style.display === 'block';
