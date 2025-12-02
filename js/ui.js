@@ -320,7 +320,7 @@ function renderHome() {
     const titleEl = document.getElementById('current-view-title');
     if (!container) return;
     
-    if (titleEl) titleEl.innerText = '400EENote';
+    if (titleEl) titleEl.innerText = 'エリまね！';
     
     // 投稿が全くない場合の空の状態
     if (!allData.posts || allData.posts.length === 0) {

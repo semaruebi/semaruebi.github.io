@@ -1,5 +1,5 @@
-# semaruebi.github.io
-GIEE400DB
+# エリまね！ 💉
+原神の精鋭狩りまとめノート
 
 ## 📋 プロジェクト概要
 原神の精鋭狩りRTA（Real Time Attack）のための知識共有プラットフォームなのよ💉

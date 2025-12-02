@@ -68,11 +68,9 @@
         background: var(--bg-sidebar); 
         flex-shrink: 0;
     }
-    
-    /* PCでは非表示だったハンバーガーボタンを非表示に（移動済み） */
-    .mobile-menu-btn { display: flex !important; }
 
     /* メインヘッダー: トップに固定、二段構造 */
+    
     /* header要素のflex設定 */
     header { 
         position: sticky;
@@ -111,7 +109,9 @@
         border-bottom: 1px solid var(--border-color);
         flex-wrap: nowrap;
         background: var(--bg-main);
+        /* stylelint-disable-next-line declaration-block-no-redundant-longhand-properties */
         overflow-x: auto;
+        /* stylelint-disable-next-line declaration-block-no-redundant-longhand-properties */
         overflow-y: visible;
         -webkit-overflow-scrolling: touch;
         order: 2;
@@ -410,6 +410,323 @@
         padding: 8px 12px !important;
         font-size: 0.9em !important;
         height: auto !important;
+    }
+}
+
+/* タブレット専用（768px-1200px） */
+@media (min-width: 768px) and (max-width: 1200px) {
+    /* カードの調整 */
+    .card {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .card-title {
+        font-size: 1.3em;
+    }
+    
+    .route-name {
+        font-size: 1.5em;
+    }
+    
+    /* タグサイズ */
+    .tag-badge {
+        font-size: 0.75em;
+        padding: 3px 10px;
+    }
+    
+    .tag-elite-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    /* ボタン */
+    .like-btn,
+    .comment-btn,
+    .bookmark-btn,
+    .edit-btn,
+    .delete-btn {
+        font-size: 0.85em;
+        padding: 6px 12px;
+    }
+    
+    /* 画像プレビュー */
+    .post-images {
+        gap: 10px;
+    }
+    
+    .post-image {
+        max-height: 250px;
+    }
+}
+
+/* スマホ専用（768px以下） */
+@media (max-width: 767px) {
+    /* コンテンツの余白を狭く */
+    .content-scroll {
+        padding: 10px !important;
+    }
+    
+    /* カードをコンパクトに */
+    .card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .card-title {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+    }
+    
+    .route-name {
+        font-size: 1.3em;
+    }
+    
+    .card-meta {
+        font-size: 0.85em;
+        margin-bottom: 10px;
+    }
+    
+    /* 本文のフォントサイズ */
+    .card-content,
+    .post-content {
+        font-size: 0.95em;
+        line-height: 1.6;
+    }
+    
+    /* タグをコンパクトに */
+    .tags-display {
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+    
+    .tag-badge {
+        font-size: 0.7em;
+        padding: 3px 8px;
+    }
+    
+    .tag-elite {
+        padding: 2px !important;
+    }
+    
+    .tag-elite-icon {
+        width: 22px;
+        height: 22px;
+    }
+    
+    /* ボタンをコンパクトに */
+    .card-actions {
+        gap: 8px;
+        margin-top: 12px;
+    }
+    
+    .like-btn,
+    .comment-btn,
+    .bookmark-btn {
+        font-size: 0.8em;
+        padding: 6px 10px;
+        min-width: 60px;
+    }
+    
+    .edit-btn,
+    .delete-btn {
+        font-size: 0.8em;
+        padding: 6px 10px;
+    }
+    
+    /* いいね数とコメント数 */
+    .like-count,
+    .comment-count {
+        font-size: 0.8em;
+    }
+    
+    /* 画像プレビュー */
+    .post-images {
+        gap: 8px;
+        margin: 10px 0;
+    }
+    
+    .post-image {
+        max-height: 200px;
+        border-radius: 6px;
+    }
+    
+    /* コメントセクション */
+    .comments-section {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+    
+    .comment-item {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .comment-author {
+        font-size: 0.85em;
+    }
+    
+    .comment-text {
+        font-size: 0.9em;
+        margin-top: 6px;
+    }
+    
+    .comment-date {
+        font-size: 0.75em;
+    }
+    
+    /* 投稿フォーム */
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        font-size: 0.9em;
+        margin-bottom: 6px;
+    }
+    
+    .form-control {
+        padding: 10px;
+        font-size: 0.95em;
+    }
+    
+    textarea.form-control {
+        min-height: 120px;
+    }
+    
+    /* 選択された精鋭タグ */
+    .selected-elite-tag {
+        padding: 6px 10px;
+        font-size: 0.85em;
+    }
+    
+    .selected-elite-tag-with-image {
+        padding: 4px 8px;
+    }
+    
+    .elite-tag-icon-img {
+        width: 22px;
+        height: 22px;
+    }
+    
+    /* 統計ダッシュボード */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-value {
+        font-size: 2em;
+    }
+    
+    .stat-label {
+        font-size: 0.85em;
+    }
+    
+    /* モーダル調整 */
+    .modal-content {
+        padding: 15px;
+        margin: 10px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.3em;
+    }
+    
+    .modal-body {
+        padding: 15px 0;
+    }
+    
+    /* エラーメッセージ */
+    .error-message,
+    .empty-state {
+        padding: 20px;
+        font-size: 0.9em;
+    }
+    
+    /* フッター */
+    footer {
+        padding: 15px;
+        padding-bottom: 40px;
+        font-size: 0.85em;
+    }
+}
+
+/* 極小スマホ（480px以下） */
+@media (max-width: 480px) {
+    /* さらにコンパクトに */
+    .card {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .card-title {
+        font-size: 1.1em;
+    }
+    
+    .route-name {
+        font-size: 1.2em;
+    }
+    
+    .card-content,
+    .post-content {
+        font-size: 0.9em;
+    }
+    
+    .tag-badge {
+        font-size: 0.65em;
+        padding: 2px 6px;
+    }
+    
+    .tag-elite-icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .like-btn,
+    .comment-btn,
+    .bookmark-btn,
+    .edit-btn,
+    .delete-btn {
+        font-size: 0.75em;
+        padding: 5px 8px;
+        min-width: 55px;
+    }
+    
+    .post-image {
+        max-height: 180px;
+    }
+    
+    /* ヘッダータイトル */
+    #current-view-title {
+        font-size: 1.1em !important;
+        padding: 10px 12px !important;
+    }
+    
+    /* 検索ボックス */
+    .search-box input {
+        width: 140px !important;
+        font-size: 0.85em !important;
+    }
+    
+    /* ボタン */
+    .icon-btn,
+    .mobile-menu-btn {
+        padding: 8px 10px !important;
+        min-width: 36px !important;
+        height: 36px !important;
+        font-size: 0.95em !important;
+    }
+    
+    .search-submit-btn {
+        padding: 8px 12px !important;
+        font-size: 0.85em !important;
+        height: 36px !important;
     }
 }
 
