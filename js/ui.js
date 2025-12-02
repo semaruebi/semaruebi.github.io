@@ -321,7 +321,7 @@ function renderHome() {
     if (!container) return;
     
     if (titleEl) {
-        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">エリまね！';
+        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">エリかるて！';
     }
     
     // 投稿が全くない場合の空の状態
@@ -399,7 +399,7 @@ function filterPosts(region, route) {
     currentFilter = { region, route };
     const titleEl = document.getElementById('current-view-title');
     if (titleEl) {
-        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">${escapeHtml(region)} > ${escapeHtml(route)}`;
+        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">${escapeHtml(region)} > ${escapeHtml(route)}`;
     }
     renderPosts();
     closeSidebarOnNavigation();

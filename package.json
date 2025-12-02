@@ -1,7 +1,7 @@
 {
   "name": "gieedb",
   "version": "4.0.0",
-  "description": "エリまね！ - 原神の精鋭狩りまとめノート 💉",
+  "description": "エリかるて！ - 原神の精鋭狩りナレッジベース 💉",
   "scripts": {
     "lint:js": "eslint js/**/*.js --max-warnings 100",
     "lint:css": "stylelint \"css/**/*.css\"",

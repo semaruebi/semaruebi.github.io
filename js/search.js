@@ -228,7 +228,7 @@ function filterBySearch() {
     });
     
     if (titleEl) {
-        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">検索: "${escapeHtml(keyword)}"`;
+        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">検索: "${escapeHtml(keyword)}"`;
     }
     
     if (filtered.length === 0) {

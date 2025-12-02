@@ -64,7 +64,7 @@ function renderBookmarks() {
     
     if (!container) return;
     if (titleEl) {
-        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">📌 ブックマーク';
+        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">📌 ブックマーク';
     }
     
     // ブックマークした投稿を取得

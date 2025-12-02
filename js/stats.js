@@ -12,7 +12,7 @@ function renderStats() {
     
     if (!container) return;
     if (titleEl) {
-        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリまね！アイコン" class="site-icon">📊 統計情報';
+        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">📊 統計情報';
     }
     
     // データが不足している場合
