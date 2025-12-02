@@ -59,11 +59,12 @@
 
     /* サイドバーヘッダー（モバイル用：閉じるボタン配置） */
     .sidebar-header {
-        padding: 10px 20px;
-        height: 60px; 
+        padding: 15px 20px;
+        height: auto; 
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
+        gap: 12px;
         border-bottom: 1px solid var(--border-color);
         background: var(--bg-sidebar); 
         flex-shrink: 0;
@@ -421,6 +422,18 @@
         font-size: 0.9em !important;
         height: auto !important;
     }
+    
+    /* ブックマークヘッダー（PC） */
+    .bookmark-header {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        gap: 15px !important;
+    }
+    
+    .bookmark-header button {
+        padding: 12px 24px !important;
+        width: auto !important;
+    }
 }
 
 /* タブレット専用（768px-1200px） */
@@ -467,6 +480,20 @@
     
     .post-image {
         max-height: 250px;
+    }
+    
+    /* ブックマークヘッダー（タブレット） */
+    .bookmark-header {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        gap: 15px !important;
+        padding: 15px !important;
+    }
+    
+    .bookmark-header button {
+        padding: 12px 20px !important;
+        width: auto !important;
+        font-size: 0.95em !important;
     }
 }
 
@@ -586,6 +613,20 @@
         font-size: 0.75em;
     }
     
+    /* ブックマークヘッダー */
+    .bookmark-header {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        gap: 10px !important;
+        padding: 12px !important;
+    }
+    
+    .bookmark-header button {
+        width: auto !important;
+        padding: 10px 16px !important;
+        font-size: 0.9em !important;
+    }
+    
     /* 投稿フォーム */
     .form-group {
         margin-bottom: 15px;
@@ -680,6 +721,32 @@
 
 /* 極小スマホ（480px以下） */
 @media (max-width: 480px) {
+    /* ブックマークヘッダー */
+    .bookmark-header {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        gap: 8px !important;
+        padding: 10px !important;
+    }
+    
+    .bookmark-header > div h3 {
+        font-size: 0.95em !important;
+    }
+    
+    .bookmark-header > div p {
+        font-size: 0.75em !important;
+    }
+    
+    .bookmark-header button {
+        width: auto !important;
+        font-size: 0.85em !important;
+        padding: 8px 12px !important;
+    }
+    
+    .bookmark-header button i {
+        margin-right: 4px;
+    }
+    
     /* さらにコンパクトに */
     .card {
         padding: 12px;

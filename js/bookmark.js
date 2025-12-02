@@ -89,12 +89,12 @@ function renderBookmarks() {
         `;
     } else {
         let html = `
-            <div class="bookmark-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px; background: var(--bg-sidebar); border-radius: 8px;">
-                <div>
-                    <h3 style="margin: 0; color: var(--cyan);"><i class="fas fa-bookmark"></i> ブックマーク一覧</h3>
-                    <p style="margin: 5px 0 0 0; font-size: 0.9em; color: var(--comment);">${sorted.length}件の投稿を保存してるのよ</p>
+            <div class="bookmark-header" style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; margin-bottom: 20px; padding: 15px; background: var(--bg-sidebar); border-radius: 8px;">
+                <div style="min-width: 0; overflow: hidden;">
+                    <h3 style="margin: 0; color: var(--cyan); font-size: 1.2em; overflow: hidden; text-overflow: ellipsis;"><i class="fas fa-bookmark"></i> ブックマーク一覧</h3>
+                    <p style="margin: 5px 0 0 0; font-size: 0.9em; color: var(--comment); overflow: hidden; text-overflow: ellipsis;">${sorted.length}件の投稿を保存してるのよ</p>
                 </div>
-                <button onclick="exportBookmarks()" class="icon-btn" title="ブックマークをエクスポート" aria-label="ブックマークをエクスポート" style="padding: 10px 15px;">
+                <button onclick="exportBookmarks()" class="icon-btn" title="ブックマークをエクスポート" aria-label="ブックマークをエクスポート" style="padding: 12px 24px; white-space: nowrap; font-size: 1em;">
                     <i class="fas fa-download"></i> エクスポート
                 </button>
             </div>
