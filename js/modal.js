@@ -15,9 +15,9 @@ function openImageModal(imageUrl) {
     const modalImage = document.getElementById('modal-image');
     if (!modal || !modalImage) return;
     
-    modal.style.display = "block";
+    modal.style.display = 'block';
     modalImage.src = escapeUrl(imageUrl);
-    modalImage.alt = "拡大画像";
+    modalImage.alt = '拡大画像';
     document.body.classList.add('modal-open');
     modal.classList.remove('closing');
     modalImage.classList.remove('closing');
@@ -37,11 +37,11 @@ function closeImageModal() {
     modal.setAttribute('aria-hidden', 'true');
     
     setTimeout(() => {
-        modal.style.display = "none";
+        modal.style.display = 'none';
         document.body.classList.remove('modal-open');
         modal.classList.remove('closing');
         modalImage.classList.remove('closing');
-        modalImage.src = "";
+        modalImage.src = '';
     }, 300);
 }
 
@@ -51,7 +51,7 @@ function closeImageModal() {
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
-    modal.style.display = "flex";
+    modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
     const closeBtn = modal.querySelector('.modal-close');
@@ -69,7 +69,7 @@ function closeModal(modalId) {
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
     setTimeout(() => {
-        modal.style.display = "none";
+        modal.style.display = 'none';
     }, 300);
 }
 

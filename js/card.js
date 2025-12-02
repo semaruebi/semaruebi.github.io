@@ -3,9 +3,9 @@
 // ============================================
 
 function createVideoHtml(content) {
-    if (!content) return "";
+    if (!content) return '';
     
-    let html = "";
+    let html = '';
     
     // YouTube URLのパターンを検出
     const youtubePatterns = [
@@ -73,7 +73,7 @@ function removeVideoUrls(content) {
 }
 
 function createImageHtml(imageUrl) {
-    if (!imageUrl) return "";
+    if (!imageUrl) return '';
     
     const urls = imageUrl.split(',');
     let html = '<div class="image-gallery">';
@@ -88,7 +88,7 @@ function createImageHtml(imageUrl) {
 }
 
 function createTagsHtml(tags) {
-    if (!tags) return "";
+    if (!tags) return '';
     
     let html = '<div class="tags-display">';
     const tagArray = tags.split(',');
@@ -97,13 +97,13 @@ function createTagsHtml(tags) {
         const trimmed = t.trim();
         if (!trimmed) return;
         
-        let tagClass = "tag-other";
+        let tagClass = 'tag-other';
         let isEliteTag = false;
         
         if (TAG_TYPES.REG.includes(trimmed)) {
-            tagClass = "tag-reg";
+            tagClass = 'tag-reg';
         } else if (TAG_TYPES.COST.includes(trimmed)) {
-            tagClass = "tag-cost";
+            tagClass = 'tag-cost';
         } else {
             // レギュレーションでもCostでもない → 精鋭タグの可能性
             isEliteTag = true;
@@ -138,7 +138,7 @@ function createTagsHtml(tags) {
 
 function createCardHtml(post, hideRegionRoute = false) {
     const isLiked = myLikedPosts.includes(post.id);
-    const originalContent = post.content || "";
+    const originalContent = post.content || '';
     
     // YouTube/Twitter埋め込みを生成
     const videoHtml = createVideoHtml(originalContent);
@@ -158,11 +158,11 @@ function createCardHtml(post, hideRegionRoute = false) {
     
     const escapedId = escapeUrl(post.id);
     const postIdJs = post.id.replace(/'/g, "\\'");
-    const escapedRegion = escapeHtml(post.region || "");
-    const escapedRoute = escapeHtml(post.route || "");
+    const escapedRegion = escapeHtml(post.region || '');
+    const escapedRoute = escapeHtml(post.route || '');
     
     // 日付の安全な処理
-    let timestamp = "日付不明";
+    let timestamp = '日付不明';
     if (post.timestamp) {
         try {
             const date = new Date(post.timestamp);
@@ -170,18 +170,18 @@ function createCardHtml(post, hideRegionRoute = false) {
                 timestamp = date.toLocaleString('ja-JP');
             }
         } catch (e) {
-            console.error("Date parsing error:", e);
+            console.error('Date parsing error:', e);
         }
     }
     
     // リージョン名に応じたクラス名を生成
-    const regionClass = getRegionClass(post.region || "");
+    const regionClass = getRegionClass(post.region || '');
     
     // ルートが選択されている場合は、リージョンとルート名を非表示
-    const regionRouteHtml = hideRegionRoute ? "" : `<div><span class="badge ${regionClass}">${escapedRegion}</span><span class="route-name clickable-route" onclick="event.stopPropagation(); navigateToRoute('${escapeUrl(post.region)}', '${escapeUrl(post.route)}')" role="button" tabindex="0">${escapedRoute}</span></div>`;
+    const regionRouteHtml = hideRegionRoute ? '' : `<div><span class="badge ${regionClass}">${escapedRegion}</span><span class="route-name clickable-route" onclick="event.stopPropagation(); navigateToRoute('${escapeUrl(post.region)}', '${escapeUrl(post.route)}')" role="button" tabindex="0">${escapedRoute}</span></div>`;
     
     // タイトルを表示（タイトルがある場合のみ）
-    const titleHtml = post.title ? `<h3 class="card-title">${escapeHtml(post.title)}</h3>` : "";
+    const titleHtml = post.title ? `<h3 class="card-title">${escapeHtml(post.title)}</h3>` : '';
     
     return `
         <article class="card clickable-card" id="card-${escapedId}" role="article" onclick="expandCard('${postIdJs}')">
@@ -205,6 +205,9 @@ function createCardHtml(post, hideRegionRoute = false) {
                     </button>
                     <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${postIdJs}', this)" aria-label="${isLiked ? 'いいねを取り消す' : 'いいね'}">
                         <i class="${isLiked ? 'fas' : 'far'} fa-heart" aria-hidden="true"></i> <span>${post.likes || 0}</span>
+                    </button>
+                    <button class="bookmark-btn ${isBookmarked(post.id) ? 'bookmarked' : ''}" onclick="event.stopPropagation(); toggleBookmark('${postIdJs}', this)" aria-label="${isBookmarked(post.id) ? 'ブックマークを解除' : 'ブックマークに追加'}" title="${isBookmarked(post.id) ? 'ブックマークを解除' : 'ブックマークに追加'}">
+                        <i class="${isBookmarked(post.id) ? 'fas' : 'far'} fa-bookmark" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -233,18 +236,18 @@ function createCompactCardHtml(post) {
     const isLiked = myLikedPosts.includes(post.id);
     const escapedId = escapeUrl(post.id);
     const postIdJs = post.id.replace(/'/g, "\\'");
-    const escapedRegion = escapeHtml(post.region || "");
-    const escapedRoute = escapeHtml(post.route || "");
-    const escapedTitle = escapeHtml(post.title || "");
+    const escapedRegion = escapeHtml(post.region || '');
+    const escapedRoute = escapeHtml(post.route || '');
+    const escapedTitle = escapeHtml(post.title || '');
     
     const postComments = allData.comments ? allData.comments.filter(c => c.postId === post.id) : [];
     const commentCount = postComments.length;
     
     const tagsHtml = createTagsHtml(post.tags);
-    const regionClass = getRegionClass(post.region || "");
+    const regionClass = getRegionClass(post.region || '');
     
     // コンテンツのプレビュー（最初の100文字）
-    const contentPreview = (post.content || "").substring(0, 100) + (post.content && post.content.length > 100 ? "..." : "");
+    const contentPreview = (post.content || '').substring(0, 100) + (post.content && post.content.length > 100 ? '...' : '');
     
     return `
         <article class="compact-card" id="compact-card-${escapedId}" data-post-id="${postIdJs}" role="article">
@@ -274,16 +277,16 @@ function createCardElement(post) {
 
 function renderCommentTree(allComments, parentId, postId) {
     const children = allComments.filter(c => c.parentId === parentId);
-    if (children.length === 0) return "";
+    if (children.length === 0) return '';
     
-    let html = "";
+    let html = '';
     children.forEach(c => {
         const isLiked = myLikedComments.includes(c.id);
         const childHtml = renderCommentTree(allComments, c.id, postId);
         const date = new Date(c.timestamp).toLocaleString();
         const escapedId = escapeUrl(c.id);
         const escapedPostId = escapeUrl(postId);
-        const escapedContent = escapeHtml(c.content || "");
+        const escapedContent = escapeHtml(c.content || '');
         const commentIdJs = c.id.replace(/'/g, "\\'");
         const postIdJs = postId.replace(/'/g, "\\'");
         
@@ -328,8 +331,8 @@ function showReplyForm(postId, commentId) {
     const form = document.getElementById(`reply-form-${targetId}`);
     if (!form) return;
     
-    const isVisible = form.style.display === "block";
-    form.style.display = isVisible ? "none" : "block";
+    const isVisible = form.style.display === 'block';
+    form.style.display = isVisible ? 'none' : 'block';
     form.classList.toggle('active', !isVisible);
     form.setAttribute('aria-hidden', isVisible);
 }
@@ -339,8 +342,8 @@ function showReplyForm(postId, commentId) {
  */
 function handleLikeToggle(id, btn, likedArray, storageKey, actionPrefix) {
     const isLiked = likedArray.includes(id);
-    const countSpan = btn.querySelector("span") || btn;
-    const icon = btn.querySelector("i");
+    const countSpan = btn.querySelector('span') || btn;
+    const icon = btn.querySelector('i');
     const current = parseInt(countSpan.innerText) || 0;
     
     if (isLiked) {
@@ -350,8 +353,8 @@ function handleLikeToggle(id, btn, likedArray, storageKey, actionPrefix) {
         } else {
             btn.innerHTML = `<i class="far fa-heart" aria-hidden="true"></i> ${newCount}`;
         }
-        btn.classList.remove("liked");
-        if (icon) icon.className = "far fa-heart";
+        btn.classList.remove('liked');
+        if (icon) icon.className = 'far fa-heart';
         btn.setAttribute('aria-label', 'いいね');
         
         const index = likedArray.indexOf(id);
@@ -361,9 +364,9 @@ function handleLikeToggle(id, btn, likedArray, storageKey, actionPrefix) {
         }
         
         fetch(CONFIG.GAS_API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: `unlike${actionPrefix}`, id: id })
         }).catch(err => console.error(`Unlike ${actionPrefix.toLowerCase()} error:`, err));
     } else {
@@ -373,17 +376,17 @@ function handleLikeToggle(id, btn, likedArray, storageKey, actionPrefix) {
         } else {
             btn.innerHTML = `<i class="fas fa-heart" aria-hidden="true"></i> ${newCount}`;
         }
-        btn.classList.add("liked");
-        if (icon) icon.className = "fas fa-heart";
+        btn.classList.add('liked');
+        if (icon) icon.className = 'fas fa-heart';
         btn.setAttribute('aria-label', 'いいねを取り消す');
         
         likedArray.push(id);
         localStorage.setItem(storageKey, JSON.stringify(likedArray));
         
         fetch(CONFIG.GAS_API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: `like${actionPrefix}`, id: id })
         }).catch(err => console.error(`Like ${actionPrefix.toLowerCase()} error:`, err));
     }

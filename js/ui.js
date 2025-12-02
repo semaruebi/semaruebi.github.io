@@ -8,11 +8,12 @@ let openRegions = {};
 let homeSections = { popular: true, latest: true };
 let myLikedPosts = JSON.parse(localStorage.getItem('rta_liked_posts') || '[]');
 let myLikedComments = JSON.parse(localStorage.getItem('rta_liked_comments') || '[]');
+let currentSortType = localStorage.getItem('rta_sort_type') || 'date_desc';
 
 // 定数
 const TAG_TYPES = {
-    REG: ["NPuI", "PuA", "PuI", "全般"],
-    COST: ["制限なし", "低凸", "Cost全般"]
+    REG: ['NPuI', 'PuA', 'PuI', '全般'],
+    COST: ['制限なし', '低凸', 'Cost全般']
 };
 
 // スワイプ検知用
@@ -21,13 +22,74 @@ let touchendX = 0;
 const SWIPE_THRESHOLD = 50;
 
 /**
+ * 投稿をソート
+ */
+function sortPosts(posts) {
+    if (!posts || posts.length === 0) return posts;
+    
+    const sorted = [...posts];
+    switch(currentSortType) {
+        case 'date_desc':
+            return sorted.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+        case 'date_asc':
+            return sorted.sort((a, b) => new Date(a.timestamp || 0) - new Date(b.timestamp || 0));
+        case 'likes_desc':
+            return sorted.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+        case 'comments_desc':
+            return sorted.sort((a, b) => {
+                const aComments = allData.comments.filter(c => c.postId === a.id).length;
+                const bComments = allData.comments.filter(c => c.postId === b.id).length;
+                return bComments - aComments;
+            });
+        default:
+            return sorted;
+    }
+}
+
+/**
+ * ソートタイプを変更
+ */
+function changeSortType(type) {
+    currentSortType = type;
+    localStorage.setItem('rta_sort_type', type);
+    showToast('並び替えを変更したのよ💉', 'success');
+    
+    // 現在の表示を更新
+    if (currentFilter.region && currentFilter.route) {
+        renderPosts();
+    } else {
+        renderHome();
+    }
+}
+
+/**
+ * ソート選択UIを更新
+ */
+function updateSortSelector() {
+    const selector = document.getElementById('sort-select');
+    if (selector) {
+        selector.value = currentSortType;
+        
+        // メインページ（ホーム）では非表示、ルートページでのみ表示
+        const sortContainer = selector.closest('.sort-selector');
+        if (sortContainer) {
+            if (!currentFilter.region || currentFilter.region === 'bookmarks' || currentFilter.region === 'stats') {
+                sortContainer.style.display = 'none';
+            } else {
+                sortContainer.style.display = 'flex';
+            }
+        }
+    }
+}
+
+/**
  * 投稿一覧を表示
  */
 function renderPosts() {
-    const container = document.getElementById("main-container");
+    const container = document.getElementById('main-container');
     if (!container) return;
     
-    let html = "";
+    let html = '';
     
     // ルート説明欄を表示（ルートが選択されている場合）
     if (currentFilter.region && currentFilter.route) {
@@ -108,7 +170,10 @@ function renderPosts() {
         p.region === currentFilter.region && p.route === currentFilter.route
     );
     
-    if (filtered.length === 0) {
+    // ソートを適用
+    const sorted = sortPosts(filtered);
+    
+    if (sorted.length === 0) {
         html += `
             <div class="empty-state" style="text-align: center; padding: 60px 20px;">
                 <img src="assets/images/sigewinne/ofuton.webp" alt="リラックス中のシグウィン" style="width: 150px; height: 150px; object-fit: contain; margin: 0 auto 20px; display: block;">
@@ -117,10 +182,13 @@ function renderPosts() {
             </div>
         `;
     } else {
-        filtered.forEach(p => html += createCardHtml(p, true));
+        sorted.forEach(p => html += createCardHtml(p, true));
     }
     
     container.innerHTML = html;
+    
+    // ソートセレクターの表示/非表示を更新
+    updateSortSelector();
     
     // Twitter Widgetsを初期化
     initTwitterWidgets();
@@ -130,7 +198,7 @@ function renderPosts() {
  * サイドバーを描画
  */
 function renderSidebar() {
-    const nav = document.getElementById("sidebar-nav");
+    const nav = document.getElementById('sidebar-nav');
     if (!nav) return;
     
     const counts = {};
@@ -143,7 +211,22 @@ function renderSidebar() {
         });
     }
     
-    let html = `<div class="nav-item home ${!currentFilter.region ? 'active' : ''}" onclick="showHome()" role="button" tabindex="0" aria-label="ホーム"><i class="fas fa-home" aria-hidden="true"></i> ホーム</div>`;
+    const bookmarkCount = myBookmarks.length;
+    const isBookmarkActive = currentFilter.region === 'bookmarks';
+    const isStatsActive = currentFilter.region === 'stats';
+    
+    let html = `
+        <div class="nav-item home ${!currentFilter.region ? 'active' : ''}" onclick="showHome()" role="button" tabindex="0" aria-label="ホーム">
+            <i class="fas fa-home" aria-hidden="true"></i> ホーム
+        </div>
+        <div class="nav-item ${isStatsActive ? 'active' : ''}" onclick="renderStats()" role="button" tabindex="0" aria-label="統計情報">
+            <span><i class="fas fa-chart-line" aria-hidden="true"></i> 統計情報</span>
+        </div>
+        <div class="nav-item ${isBookmarkActive ? 'active' : ''}" onclick="renderBookmarks()" role="button" tabindex="0" aria-label="ブックマーク">
+            <span><i class="fas fa-bookmark" aria-hidden="true"></i> ブックマーク</span>
+            <span class="count-badge">${bookmarkCount}</span>
+        </div>
+    `;
     const grouped = {};
     
     if (allData.routes) {
@@ -183,7 +266,7 @@ function renderSidebar() {
                     <span class="count-badge">${routeCount}</span>
                 </div>`;
         });
-        html += `</div>`;
+        html += '</div>';
     }
     nav.innerHTML = html;
 }
@@ -231,17 +314,17 @@ function toggleRegion(region) {
  */
 function renderHome() {
     currentFilter = { region: null, route: null };
-    const searchInput = document.getElementById("search-input");
+    const searchInput = document.getElementById('search-input');
     if (searchInput) {
-        searchInput.value = "";
+        searchInput.value = '';
         updateSearchTypeSelector();
     }
     
-    const container = document.getElementById("main-container");
-    const titleEl = document.getElementById("current-view-title");
+    const container = document.getElementById('main-container');
+    const titleEl = document.getElementById('current-view-title');
     if (!container) return;
     
-    if (titleEl) titleEl.innerText = "400EENote";
+    if (titleEl) titleEl.innerText = '400EENote';
     
     // 投稿が全くない場合の空の状態
     if (!allData.posts || allData.posts.length === 0) {
@@ -298,6 +381,9 @@ function renderHome() {
     
     initTwitterWidgets();
     
+    // ソートセレクターの表示/非表示を更新
+    updateSortSelector();
+    
     // ドラッグスクロール機能を再初期化（DOMが更新された後）
     setTimeout(() => {
         if (typeof initDragScroll === 'function') {
@@ -313,7 +399,7 @@ function toggleHomeSection(sectionName) {
 
 function filterPosts(region, route) {
     currentFilter = { region, route };
-    const titleEl = document.getElementById("current-view-title");
+    const titleEl = document.getElementById('current-view-title');
     if (titleEl) titleEl.innerText = `${escapeHtml(region)} > ${escapeHtml(route)}`;
     renderPosts();
     closeSidebarOnNavigation();

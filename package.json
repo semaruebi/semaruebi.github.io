@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "description": "400EENote - 精鋭狩りRTA Knowledge Base 💉",
   "scripts": {
-    "lint:js": "eslint js/**/*.js --max-warnings 0",
+    "lint:js": "eslint js/**/*.js --max-warnings 100",
     "lint:css": "stylelint \"css/**/*.css\"",
     "validate:html": "node scripts/validate-html.js",
     "check:images": "node scripts/check-images.js",

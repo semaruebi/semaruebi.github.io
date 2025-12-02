@@ -9,10 +9,10 @@ let allData = { routes: [], posts: [], comments: [], eliteEnemies: [] };
  * データ取得（リトライ機能付き）
  */
 async function fetchData(btnElement = null) {
-    const container = document.getElementById("main-container");
+    const container = document.getElementById('main-container');
     if (!container) return;
     
-    let originalIcon = "";
+    let originalIcon = '';
     
     if (btnElement) {
         btnElement.disabled = true;
@@ -32,9 +32,9 @@ async function fetchData(btnElement = null) {
         // アクセスログ用の情報をURLパラメータに追加（プライバシーに配慮）
         const accessInfo = {
             t: Date.now(), // キャッシュ回避用
-            userAgent: navigator.userAgent || "",
-            referer: document.referrer || "",
-            url: window.location.href || ""
+            userAgent: navigator.userAgent || '',
+            referer: document.referrer || '',
+            url: window.location.href || ''
         };
         const queryString = Object.entries(accessInfo)
             .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
@@ -48,7 +48,7 @@ async function fetchData(btnElement = null) {
             allData = data;
             
             // デバッグ用：取得したデータを確認
-            console.log("Fetched data:", {
+            console.log('Fetched data:', {
                 postsCount: data.posts ? data.posts.length : 0,
                 routesCount: data.routes ? data.routes.length : 0,
                 commentsCount: data.comments ? data.comments.length : 0,
@@ -59,7 +59,7 @@ async function fetchData(btnElement = null) {
             collectAllTags();
             renderSidebar();
             
-            const searchVal = document.getElementById("search-input")?.value || "";
+            const searchVal = document.getElementById('search-input')?.value || '';
             if (searchVal) {
                 filterBySearch();
             } else if (currentFilter.region) {
@@ -69,17 +69,18 @@ async function fetchData(btnElement = null) {
             }
             
             setupFormOptions();
+            updateSortSelector();
             
             if (btnElement) {
                 showToast('データを更新したわよ！最新の診断結果なの💉', 'success', 2000);
             }
         } catch (e) {
-            console.error("JSON Parse Error:", e, text);
-            throw new Error("データの解析に失敗しました");
+            console.error('JSON Parse Error:', e, text);
+            throw new Error('データの解析に失敗しました');
         }
     } catch (err) {
-        console.error("Fetch Error:", err);
-        const errorMessage = err.message || "データの読み込みに失敗しました";
+        console.error('Fetch Error:', err);
+        const errorMessage = err.message || 'データの読み込みに失敗しました';
         
         if (allData.posts.length === 0 && !btnElement) {
             container.innerHTML = `
@@ -111,7 +112,7 @@ async function submitComment(postId, parentId) {
     
     const content = input.value.trim();
     if (!content) {
-        showToast("コメントを見せてちょうだい。", 'warning');
+        showToast('コメントを見せてちょうだい。', 'warning');
         return;
     }
     
@@ -123,32 +124,32 @@ async function submitComment(postId, parentId) {
     if (!btn) return;
     
     btn.disabled = true;
-    btn.innerText = "じっとしててね…";
+    btn.innerText = 'じっとしててね…';
     btn.setAttribute('aria-label', '送信中...');
     
     try {
         await fetchWithRetry(CONFIG.GAS_API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                action: "comment",
+                action: 'comment',
                 postId: postId,
                 parentId: parentId,
                 content: content
             })
         });
         
-        showToast("コメントを受け付けたのよ。力を抜いて、リラックスするのよ。", 'success');
-        input.value = "";
-        formDiv.style.display = "none";
+        showToast('コメントを受け付けたのよ。力を抜いて、リラックスするのよ。', 'success');
+        input.value = '';
+        formDiv.style.display = 'none';
         formDiv.setAttribute('aria-hidden', 'true');
         setTimeout(() => fetchData(), 1500);
     } catch (err) {
-        showToast("あら、エラーみたい。落ち着くのよ。", 'error');
+        showToast('あら、エラーみたい。落ち着くのよ。', 'error');
     } finally {
         btn.disabled = false;
-        btn.innerText = "送信";
+        btn.innerText = '送信';
         btn.setAttribute('aria-label', 'コメントを送信');
     }
 }
@@ -162,18 +163,18 @@ async function submitContact(event) {
     const form = document.getElementById('contact-form');
     if (!form) return;
     
-    const type = document.getElementById('contact-type')?.value || "";
-    const message = document.getElementById('contact-message')?.value.trim() || "";
-    const name = document.getElementById('contact-name')?.value.trim() || "";
+    const type = document.getElementById('contact-type')?.value || '';
+    const message = document.getElementById('contact-message')?.value.trim() || '';
+    const name = document.getElementById('contact-name')?.value.trim() || '';
     
     // バリデーション
     if (!type) {
-        showToast("種類を選択してほしいのよ", 'warning');
+        showToast('種類を選択してほしいのよ', 'warning');
         return;
     }
     
     if (!message) {
-        showToast("内容を入力してほしいのよ", 'warning');
+        showToast('内容を入力してほしいのよ', 'warning');
         return;
     }
     
@@ -182,28 +183,28 @@ async function submitContact(event) {
     
     const originalText = submitBtn.innerText;
     submitBtn.disabled = true;
-    submitBtn.innerText = "送信中...";
+    submitBtn.innerText = '送信中...';
     submitBtn.setAttribute('aria-label', '送信中...');
     
     try {
         await fetchWithRetry(CONFIG.GAS_API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                action: "contact",
+                action: 'contact',
                 type: type,
                 name: name,
                 message: message
             })
         });
         
-        showToast("お問い合わせはちゃんとウチが届けるのよ、ありがとう！", 'success');
+        showToast('お問い合わせはちゃんとウチが届けるのよ、ありがとう！', 'success');
         form.reset();
         setTimeout(() => closeContactForm(), 1500);
     } catch (err) {
-        console.error("Contact error:", err);
-        showToast("送信に失敗しちゃったみたいなのよ、もう一度試してもらえるかしら。", 'error');
+        console.error('Contact error:', err);
+        showToast('送信に失敗しちゃったみたいなのよ、もう一度試してもらえるかしら。', 'error');
     } finally {
         submitBtn.disabled = false;
         submitBtn.innerText = originalText;

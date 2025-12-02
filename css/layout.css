@@ -17,11 +17,11 @@ aside {
 }
 
 [data-theme="light"] aside {
-    background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+    background: linear-gradient(180deg, #fff 0%, #fafbfc 100%);
 }
 
 [data-theme="sigewinne"] aside {
-    background: linear-gradient(180deg, #ffffff 0%, #fef7ff 100%);
+    background: linear-gradient(180deg, #fff 0%, #fef7ff 100%);
 }
 
 aside::before {
@@ -131,7 +131,6 @@ aside::before {
 
 .nav-group-content { 
     display: none; 
-    padding-left: 0; 
     margin-left: 15px;
     margin-top: 4px;
     margin-bottom: 8px;
@@ -166,6 +165,7 @@ aside::before {
         opacity: 0; 
         transform: translateY(-8px); 
     } 
+
     to { 
         opacity: 1; 
         transform: translateY(0); 
@@ -257,7 +257,7 @@ aside::before {
     border: 1px dashed var(--border-color); font-size: 1em; padding-left: 15px; font-weight: bold; 
 }
 
-.nav-item.home.active { color: #ffffff; border-style: solid; }
+.nav-item.home.active { color: #fff; border-style: solid; }
 
 .count-badge { 
     font-size: 0.7em; 
@@ -301,12 +301,12 @@ header {
 }
 
 [data-theme="light"] header {
-    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+    background: linear-gradient(135deg, #fff 0%, #fafbfc 100%);
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 [data-theme="sigewinne"] header {
-    background: linear-gradient(135deg, #ffffff 0%, #fef7ff 100%);
+    background: linear-gradient(135deg, #fff 0%, #fef7ff 100%);
     box-shadow: 0 1px 3px rgba(192, 132, 252, 0.1);
 }
 
